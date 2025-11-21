@@ -237,7 +237,8 @@ function revealAnswer() {
   
   // text odpovede
   const answerHTML = card.answer.replace(/\*(.+?)\*/g, "<b>$1</b>");
-  a.innerHTML = answerHTML || '&nbsp;';
+  a.innerHTML = answerHTML;
+  note.innerHTML = card.anote || '&nbsp;';
 
   // schovat a zobrazit jednotlive elementy
   hideRevealButton();
