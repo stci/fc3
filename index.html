@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>fc3</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <header class="controls" id="management">
+      <button id="btn-manage-db" class="btn">Upraviť databázu</button>
+      <button id="btn-select-lessons" class="btn">Vybrať lekcie</button>
+    </header>
+
+    <!-- Databáza -->
+    <section id="window-database" class="window hidden">
+      <h1>Databáza</h1>
+      <textarea id="rawData"></textarea>
+      <div id="db-included-builtin-list" class="note">
+	    <p id="db-included-builtin-head">Vybrané vstavané lekcie:</p>
+        <p id="included-builtin-lessons"></p>
+      </div>
+      <div class="controls">
+        <button id="btn-load-db" class="btn">Načítať</button>
+      </div>
+	  <p id="database-log"></p>
+      <div>
+		<button id="btn-manage-builtin-db" class="btn">Použiť vstavané lekcie</button>
+      </div>
+      <div id="window-help" class="hidden">
+	    <hr />
+        <p id="help">
+		  <u>Podporované formáty:</u><br />
+		  <b>=== Nazov lekcie</b><br />
+		  <i> - riadok musí začínať "=== " (vrátane medzery)</i><br /><br />
+		  <b>slovenský výraz [poznámka 1];anglický výraz [poznámka 2]</b><br />
+		  <i> - slovenský a anglický výraz je oddelený znakom ";" (bodkočiarka)</i><br />
+          <i> - v riadku môže byť len jeden znak ";" (bodkočiarka)</i><br />
+          <i> - "poznámky" nie sú povinné</i><br />
+          <i> - "poznámka" je zvlášť pre slovenský a anglický výraz</i><br />
+          <i> - "poznámka" musí byť na konci výrazu a musí byť v hranatých zátvorkách</i><br />
+		</p>
+      </div>
+    </section>
+	
+    <!-- vstavané lekcie -->
+    <section id="window-builtin" class="window hidden">
+      <h1>Vstavané lekcie</h1>
+      <ul id="builtin-check-list"></ul>
+      <hr />
+      <div class="controls">
+        <button id="btn-use-builtin" class="btn">Použiť vybrané</button>
+      </div>
+    </section>
+
+    <!-- Výber lekcií -->
+    <section id="window-sections" class="window hidden">
+      <h1>Výber lekcií</h1>
+      <div class="controls">
+        <button id="btn-select-all" class="btn">Vybrať všetky</button>
+        <button id="btn-select-none" class="btn">Zrušiť všetky</button>
+      </div>
+      <ul id="lessons-check-list"></ul>
+      <hr />
+      <div class="controls">
+        <button id="btn-start-training" class="btn">Trénovať vybrané</button>
+      </div>
+    </section>
+
+    <!-- Kartičky -->
+    <section id="window-cards" class="hidden">
+	<div class="rating-bar">
+      <div class="rating-100"></div>
+      <div class="rating-50"></div>
+      <div class="rating-0"></div>
+      <div class="rating-null"></div>
+    </div>
+    <div class="card">
+        <p id="section">Sekcia</p>
+        <hr id="card-hru" />
+        <div class="card-info"><button id="btn-play-audio" class="hidden blink">&#9658; (prehrať zvuk)</button><p id="card-number">#</p></div>
+        <p id="question"></p>
+        <p id="answer">?</p>
+		<p id="note" class="note">&nbsp;</p>
+        <hr id="card-hrb" />
+        <div class="controls">
+          <button id="btn-reveal" class="btn">Ukázať správnu odpoveď</button>
+          <div id="rate" class="rating hidden">
+		    <p id="rating-note">Ohodnoť sa</p>
+            <button data-rating="0" title="Vôbec som nevedel" style="background-color:rgba(255,0,0,0.4)">&#128542;</button><!--128542 -->
+            <button data-rating="50" title="Nepresne / zaváhal som" style="background-color:rgba(255,165,0,0.4)">&#128528;</button>
+            <button data-rating="100" title="Perfektne" style="background-color:rgba(0,128,0,0.4)">&#128522;</button>
+          </div>        
+		</div>
+      </div>
+    </section>
+ </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
