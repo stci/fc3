@@ -464,8 +464,6 @@ function manageDB() {
 }
 
 function manageBuiltInDB() {
-  showWindow("window-builtin");
-
   loadBuiltInLessons().then(data => {
 	builtInData = data;
     const listElement = document.getElementById("builtin-check-list");
@@ -477,6 +475,8 @@ function manageBuiltInDB() {
     });
 	//showBuiltInLessons
   });
+  
+  showWindow("window-builtin");
 }
 
 function actualizeBuiltinDB() {
