@@ -31,3 +31,34 @@ Dobrý deň!;Guten Morgen!
 Dovidenia!;Auf Wiedersehen!
 Ahoj! [pri rozlúčení];Tschuss!
 Vidíme sa zajtra!;Bis morgen!
+
+=== Wir Alle 3 | 2. Das ist Meine Familie
+rodina / rodiny;die Familie / die Familien
+matka / matky;die Mutter / die Mütter [Die Mutter von Martin  Katarina.]
+otec / otcovia;der Vater / die Väter
+ocko / ockovia [otecko];der Papa / die Papas
+sestra / sestry;die Schwester / die Schwestern
+brat / bratia [dedko];der Bruder / die Brüder
+babka / babky [stará mama];die Oma / die Omas
+dedko / dedkovia [starý otec];der Opa / die Opas
+meno / mená;der Name / die Namen
+môj / moja;mein, meine [Das ist mein Vater.]
+tvoj / tvoje;dein / deine [Wie heißt deine Mutter?]
+rodičia;die Eltern [Das sind meine Eltern.]
+starý rodičia;die Großeltern [Sind das die Großeltern von Ema?]
+teta / tety;die Tante / die Tanten [Peter hat zwei Tanten.]
+strýko / strýkovia;der Onkel / die Onkel [Das ist mein Onkel Michal.]
+bratranec / bratranci;der Cousin / die Cousinen [Meine Cousin ist 10 Jahre alt.]
+sesternica / sesternice;die Cousine / die Cousinen [Hast du auch eine Cousine?]
+dieťa / deti;das Kind / die Kinder
+bábätko / bábätká;das Baby / die Babys [Mein Bruder ist noch ein Baby.]
+číslo / čísla;die Nummer / die Nummern
+oni / ony;sie [Sie heißen Martin und Peter.]
+ten, tá, to;der, die, das [Wie alt ist der Mann, die Frau, das Baby?]
+správne;richtig
+chybne;falsch
+ešte;noch [Er ist noch ein Baby.]
+alebo;oder [Richtig oder falsch?]
+áno;ja [Ja, ich bin Martin.]
+nie;nein
+
