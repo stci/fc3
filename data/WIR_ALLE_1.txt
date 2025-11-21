@@ -32,7 +32,7 @@ Dovidenia!;Auf Wiedersehen!
 Ahoj! [pri rozlúčení];Tschuss!
 Vidíme sa zajtra!;Bis morgen!
 
-=== Wir Alle 3 | 2. Das ist Meine Familie
+=== Wir Alle 3 | 2. Das ist Meine Familie #de-DE#
 rodina / rodiny;die Familie / die Familien
 matka / matky;die Mutter / die Mütter [Die Mutter von Martin  Katarina.]
 otec / otcovia;der Vater / die Väter
@@ -61,4 +61,5 @@ ešte;noch [Er ist noch ein Baby.]
 alebo;oder [Richtig oder falsch?]
 áno;ja [Ja, ich bin Martin.]
 nie;nein
+
 
