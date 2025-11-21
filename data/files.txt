@@ -1,2 +1,2 @@
-/data/english.FF2.txt
-/data/deutsch.txt
+../fc3/data/english.FF2.txt
+../fc3/data/deutsch.txt
