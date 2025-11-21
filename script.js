@@ -412,24 +412,29 @@ function loadBuiltInLessonsFile(file) {
 }
 
 function loadBuiltInLessons() {
-	
-  const files = [
-    "../fc3/data/english.FF.txt",
-    "../fc3/data/deutsch.txt"
-  ];
+  // Step 1: load files.txt
+  return fetch("/data/files.txt")
+    .then(response => {
+      if (!response.ok) throw new Error("Failed to load files.txt");
+      return response.text();
+    })
+    .then(text => {
+      // Split lines and remove empty lines / trim whitespace
+      const files = text
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(line => line.length > 0);
 
-  return Promise.all(files.map(f => loadBuiltInLessonsFile(f)))
+      // Step 2: load all listed files
+      return Promise.all(files.map(f => loadBuiltInLessonsFile(f)));
+    })
     .then(results => {
-      const merged = {
-        lessons: [],
-        cards: []
-      };
-
+      // Step 3: merge all results
+      const merged = { lessons: [], cards: [] };
       results.forEach(res => {
         merged.lessons.push(...res.lessons);
         merged.cards.push(...res.cards);
       });
-
       return merged;
     });
 }
@@ -447,7 +452,14 @@ function showWindow(id) {
 function manageDB() {
   showWindow("window-database");
   const selected = loadIncludedBuiltinLessons();
-  document.getElementById("included-builtin-lessons").innerText = selected.join("\n");
+  if (selected.length > 0) {
+	document.getElementById("db-included-builtin-head").innerText = "Použité vstavané lekcie:";
+	document.getElementById("included-builtin-lessons").innerText =
+      selected.map(item => `• ${item}`).join("\n");
+  } else {
+	document.getElementById("db-included-builtin-head").innerText = "Nie sú použité žiadne vstavané lekcie.";
+	document.getElementById("included-builtin-lessons").innerText = "";
+  };
 }
 
 function manageBuiltInDB() {
@@ -463,6 +475,16 @@ function manageBuiltInDB() {
       ch.checked = includedLessons.includes(ch.value);
     });
 	//showBuiltInLessons
+  });
+}
+
+function actualizeBuiltinDB() {
+  loadBuiltInLessons().then(data => {
+	const includedLessons = loadIncludedBuiltinLessons();
+    const cardsToInclude = data.cards.filter(item => includedLessons.includes(item.section)); 
+    storedCards = storedCards.filter(card => !card.metadata.builtin);
+    storedCards.push(...cardsToInclude);
+    storeCards(storedCards);
   });
 }
 
@@ -554,6 +576,7 @@ function showLessons() {
         .map(c => c.section)    // extract section
     )
   ];
+  if (Bsections.length > 0) {
   const lixx = document.createElement("li");
   lixx.innerHTML = `<p id="builtin-lessons-note">Vstavané lekcie</p><hr />`;
   list.appendChild(lixx);
@@ -563,6 +586,7 @@ function showLessons() {
 	lix.innerHTML = `<input type="checkbox" name="${section}" value="${section}" checked><label for="${section}">${section} <span style="font-style: italic; color: #D3D3D3;">(${cnt})</span></label>`;
     list.appendChild(lix);
   });
+  };
   
   showWindow("window-sections");
 }
@@ -608,6 +632,7 @@ otec;father`;
   );
 
   storedCards = loadCards();
+  actualizeBuiltinDB();
   
   showLessons();
   // Po načítaní rovno začni tréning

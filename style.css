@@ -107,6 +107,7 @@ textarea {
   color: grey;
   font-style: italic;
   margin-bottom: 0;
+  width: 90%;
 }
 
 #db-included-builtin-head {
