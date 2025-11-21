@@ -1,16 +1,33 @@
 === Wir Alle 3 | 1. Wer ist das? #de-DE#
 mačka / mačky;die Katze / die Katzen
-pani;Frau
-pán;Herr
-volať sa;heißen
-sein;byť
-ja;ich
-ty;du
-To je...;Das ist...
-jeden / jedna;ein / eine
-a [spojka];und
-Kto?;Wer?
-Ako?;Wie?
+pani;Frau [Das ist Frau Lenz.]
+pán;Herr [Das ist Herr Lenz.]
+volať sa;heißen [ich heiße, du heißt]
+sein;byť [ich bin, du bist]
+ja;ich [Ich bin Martin.]
+ty;du [Wer bist du?]
+To je...;Das ist... [Das ist Micka.]
+jeden / jedna;ein / eine [Micka ist eine Katze.]
+a [spojka];und [Ich bin Marrtin und wer bist du?]
+Kto?;Wer? [Wer ist das?]
+Ako?;Wie? [Wie heißt du?]
 Dobré ráno!;Guten Morgen!
 Ahoj!;Hallo! / Hi!
 To sme my.;Das sind wir.
+rok / roky;das Jahr / die Jahre [Ich bin 13 Jahre alt.]
+nový;neu [Peter ist neu in Bratislava]
+tu;hier [Peter ist auch hier]
+tiež;auch [Ich bin auch 13.]
+*Koľko* máš *rokov*?;*Wie alt* bist du?
+mama / mamy;die Mama / die Mamas [Hallo, Mama!]
+priateľ / priatelia;der Freund / die Freunde [Ist Simon ein Freund von Martin?]
+priateľka / priateľky;die Freundin / die Freundinnen [Ema ist die Freundin von Eli.]
+učiteľ / učitelia;der Lehrer / die Lehrer
+učiteľka / učiteľky;die Lehrerin / die Lehrerinnen
+on;er [Er heißt Peter.]
+ona;sie [Sie ist Ema.]
+Martinov priateľ;ein Freund von Martin
+Dobrý deň!;Guten Morgen!
+Dovidenia!;Auf Wiedersehen!
+Ahoj! [pri rozlúčení];Tschuss!
+Vidíme sa zajtra!;Bis morgen!
