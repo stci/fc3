@@ -414,8 +414,8 @@ function loadBuiltInLessonsFile(file) {
 function loadBuiltInLessons() {
 	
   const files = [
-    "./data/english.FF.txt",
-    "./data/deutsch.txt"
+    "../fc3/data/english.FF.txt",
+    "../fc3/data/deutsch.txt"
   ];
 
   return Promise.all(files.map(f => loadBuiltInLessonsFile(f)))
@@ -619,5 +619,6 @@ otec;father`;
 }
 
 window.addEventListener("load", init);
+
 
 
