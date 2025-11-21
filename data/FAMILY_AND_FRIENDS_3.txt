@@ -8,15 +8,16 @@ strýko;uncle
 brat;brother
 sestra;sister
 bratranec / sesternica;cousin
-To červené je *väčšie* ako to modré auto.;The red card is *bigger* than the blue car.
+To červené auto je *väčšie* ako to modré auto.;The red car is *bigger* than the blue car.
 To zelené auto je *rýchlejšie* ako to červené auto.;The green car is *faster* than the red car.
 väčší;bigger
 menší;smaller
 vyšší;taller
 rýchlo;fast
 rýchlejšie;faster
-pomaly;slow
-pomalšie;slower
+pomalo;slow
+pomaly;slowly
+pomalší;slower
 *Bolo* slnečno.;It *was* sunny.
 Deti *boli* smutné.;The children *were* sad.
 To dievča *bolo* hladné.;The girl *was* hungry.
@@ -139,4 +140,5 @@ odznaky;badges
 ulity;shells
 zbierka;collection
 Máš najakú zbierku?;Have you got a collection?
+
 Ja zbieram odznaky a nálepky.;I collect badges and stickers.
