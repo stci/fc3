@@ -1,0 +1,142 @@
+=== Family & Friends 3 | 1. They're from Australia
+stará mama;grandma
+starý otec;grandpa
+mamka;mum
+tatko;dad
+teta;aunt
+strýko;uncle
+brat;brother
+sestra;sister
+bratranec / sesternica;cousin
+To červené je *väčšie* ako to modré auto.;The red card is *bigger* than the blue car.
+To zelené auto je *rýchlejšie* ako to červené auto.;The green car is *faster* than the red car.
+väčší;bigger
+menší;smaller
+vyšší;taller
+rýchlo;fast
+rýchlejšie;faster
+pomaly;slow
+pomalšie;slower
+*Bolo* slnečno.;It *was* sunny.
+Deti *boli* smutné.;The children *were* sad.
+To dievča *bolo* hladné.;The girl *was* hungry.
+Mamke a tatkovi *bolo* zima.;Mum and dad *were* cold.
+Kedy máš narodeniny?;When's your birthday?
+Koľko máš rokov?;How old are you?
+Narodeniny mám v októbri.;My birthday is in October.
+Mám deväť rokov.;I'm nine.
+On je zo Slovenska.;He's from Slovakia.
+My sme zo Španielska.;We're from Spain.
+Oni sú z Brazílie.;They're from Brazil.
+Ona je z USA.;She's from USA.
+Odkiaľ je (ona)?;Where is she from?
+To je Katka.;It's Katka.
+kresliť;to draw
+lyžica;spoon
+had;snake
+pastelka;crayon
+piť;to drink
+hrať (sa);to play
+Pijeme z pohára.;We drink from a cup.
+(My) jeme lyžicou.;We eat with a spoon.
+jar;spring
+leto;summer
+jeseň;autumn
+zima;winter
+záhrada;garden
+ročné obdobie;season
+Zvieratká sa hrajú v lese.;The animals play in the forest.
+Je teplo a slnečno.;It's warm and sunny.
+Medveď Bruno nie je bdelý (zobudený).;Bruno the bear isn't *awake*.
+Ostatné zvieratká spia.;The other animals are asleep.
+bdelý (byť zobudený);awake
+spiaci;asleep
+ospalý;sleepy
+šťastný;happy
+Je Martin z Egyptu?;Is Martin from Egypt?
+Nie, (on) nie je.;No, he isn't.
+Áno, (on) je.";Yes, he is.
+Řád ťa spoznávam.;Nice to meet you.
+Ako sa dnes máš?;How are you today?
+Bruno nie je doma.;Bruno isn't at home.
+
+=== Family & Friends 3 | 2. My weekend
+čítať komiks;read comics
+robiť gymnastiku;to do gymnastics
+hrať šach;to play chess
+chytať ryby;to fish
+hrať basketbal;to play basketball
+fotografovať;to take photos
+hrať volejbal;to play volleyball
+Rád čítam.;I *like* read*ing*.
+Nemám rád chytanie rýb.;I *don't like* fish*ing*.
+Rád hrávaš šachy? Áno.;"Do you *like* play*ing* chess? *Yes*, I *do*."
+Hráva (on) rád volejbal? Nie.;"*Does* he *like* play*ing* volleyball? *No*, he *doesn't*."
+Tatko rád hráva šach.;Dad *likes* play*ing* chess.
+(tí) Chlapci neradi čítajú.;The boys *don't like* read*ing*.
+Poďme sa spolu hrať.;Let's play together.
+Mám loptu.;I've got a ball.
+tvár;face
+vesmír;space
+lano/špagát;rope
+kameň;stone
+šarkan;kite
+bicykel;bike
+kocka;cube
+hrať na gitare;to play the guitar
+nakupovať;to shop
+variť;to cook
+maľovať;to paint
+hrať na klavíri;to play the piano
+navštíviť rodinu;to visit family
+Moji priatelia majú veľa hobby ("koníčkov").;My friends have got a lot of hobbies.
+milovať;to love
+Milujem počúvanie hudby.;I love listening to music.
+Ja tiež milujem čítanie komiksov.;I love reading comics, too.
+Mám tréningy baletu každý utorok a piatok.;I have ballet lessons every Tuesday and Friday.
+pozeranie TV;watching TV
+priateľ (s ktorým si dopisujem);penfriend
+Čo rád robievaš?;What do you like doing?
+Martin nemá brata.;Martin doesn't have brother.
+
+=== Family & Friends 3 | 3. My things
+počítač;computer
+televízor;TV
+DVD prehrávač;DVD player
+CD prehrávač;CD player
+MP3 prehrávač;MP3 player
+kamera;camera
+zapnúť [napr. svetlo];turn on
+vypnúť [napr. svetlo];turn off
+Martin, môžeš prosím zapnúť televízor?;Martin, can you turn on the TV, please?
+je pokazený;it's broken
+môj;my
+tvoj;your
+ich (televízor);their (TV)
+Toto je *tvoj* počítač.;This is *your* computer.
+To je *naša* kamera.;That's *our* camera.
+To je *ich* kniha.;That's *their* book.
+Môžem použiť tvoj počítač? Áno, môžeš.;*Can* I *use* your computer? *Yes*, you *can*.
+Nie nemôžeš.;*No*, you *can't*.
+Môžeš prosím vypnúť televízor?;*Can* you *turn off* the TV, please?
+otvor okno;open the window
+pomôž mi s domácimi úlohami;help me with my homework
+zapnúť televízor;turn on the TV
+zavri dvere;close the door
+*obleč* si kabát;*put on* your coat
+farma;farm
+hviezda;star
+umenie;art
+žralok;shark
+park;park
+šál;scarf
+rameno;arm
+nálepky;stickers
+plagáty;posters
+komiks;comics
+pohľadnice;postcards
+odznaky;badges
+ulity;shells
+zbierka;collection
+Máš najakú zbierku?;Have you got a collection?
+Ja zbieram odznaky a nálepky.;I collect badges and stickers.
