@@ -413,7 +413,7 @@ function loadBuiltInLessonsFile(file) {
 
 function loadBuiltInLessons() {
   // Step 1: load files.txt
-  return fetch("/data/files.txt")
+  return fetch("../fc3/data/files.txt")
     .then(response => {
       if (!response.ok) throw new Error("Failed to load files.txt");
       return response.text();
@@ -644,6 +644,7 @@ otec;father`;
 }
 
 window.addEventListener("load", init);
+
 
 
 
