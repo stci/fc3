@@ -3,7 +3,7 @@ mačka / mačky;die Katze / die Katzen
 pani;Frau [Das ist Frau Lenz.]
 pán;Herr [Das ist Herr Lenz.]
 volať sa;heißen [ich heiße, du heißt]
-sein;byť [ich bin, du bist]
+byť;sein [ich bin, du bist]
 ja;ich [Ich bin Martin.]
 ty;du [Wer bist du?]
 To je...;Das ist... [Das ist Micka.]
