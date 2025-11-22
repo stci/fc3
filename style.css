@@ -67,7 +67,7 @@ textarea {
   resize: none;
   width: 100%;
   max-width: 1000px; /* širšie na PC */
-  height: 400px;
+  height: 350px;
   padding: 0.5rem;
   font-family: monospace;
   box-sizing: border-box; 
