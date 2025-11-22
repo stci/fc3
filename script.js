@@ -560,7 +560,7 @@ function showLessons() {
   const sections = [
     ...new Set(
       storedCards
-        .filter(c => !c.metadata?.builtin)  // filter cards based on attribute
+        .filter(c => c && !c.metadata?.builtin)  // filter cards based on attribute
         .map(c => c.section)    // extract section
     )
   ];
