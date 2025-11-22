@@ -519,7 +519,7 @@ function startTraining() {
   const filteredCards = storedCards.filter(item => selected.includes(item.section));
  
   cards = [...filteredCards].sort(
-    (a, b) => a.metadata.score - b.metadata.score
+    (a, b) => (a.metadata.score - b.metadata.score) || (Math.random() - 0.5)
   );
   index = 0;
   showWindow("window-cards");
