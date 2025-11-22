@@ -106,8 +106,10 @@ textarea {
   font-size: 0.8rem;
   color: grey;
   font-style: italic;
+  margin: 0 auto;
+  margin-top: 0.5rem;
   margin-bottom: 0;
-  width: 90%;
+  width: 100%;
 }
 
 #db-included-builtin-head {
@@ -320,6 +322,9 @@ textarea {
     max-width: 95%;
   }
 
+  #db-included-builtin-list {
+	width: 95%;
+  }
 /*
   .btn,
   .rating button {
