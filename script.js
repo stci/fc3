@@ -121,12 +121,14 @@ function hideHelp() {
 // load data from storage ------------------------------------------------------
 function loadCards() {
   const cards = JSON.parse(localStorage.getItem("flashcards")) || [];
+  const cleaned = cards.filter(card => card !== null);
   return cards;
 }
 
 // save data to storage
 function storeCards(cards) {
-  localStorage.setItem("flashcards", JSON.stringify(cards));
+  const cleaned = cards.filter(card => card !== null);
+  localStorage.setItem("flashcards", JSON.stringify(cleaned));
 }
 
 // load data from storage
