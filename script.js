@@ -565,7 +565,7 @@ function showLessons() {
     )
   ];
   sections.forEach(section => {
-	var cnt = storedCards.filter(item => item.section === section).length;
+	var cnt = storedCards.filter(item => item && item.section === section).length;
     const li = document.createElement("li");
 	li.innerHTML = `<input type="checkbox" name="${section}" value="${section}" checked><label for="${section}">${section} <span style="font-style: italic; color: #D3D3D3;">(${cnt})</span></label>`;
     list.appendChild(li);
@@ -575,7 +575,7 @@ function showLessons() {
   const Bsections = [
     ...new Set(
       storedCards
-        .filter(c => c.metadata.builtin == true)  // filter cards based on attribute
+        .filter(c => c && c.metadata.builtin == true)  // filter cards based on attribute
         .map(c => c.section)    // extract section
     )
   ];
@@ -584,7 +584,7 @@ function showLessons() {
   lixx.innerHTML = `<p id="builtin-lessons-note">Vstavané lekcie</p><hr />`;
   list.appendChild(lixx);
   Bsections.forEach(section => {
-	var cnt = storedCards.filter(item => item.section === section).length;
+	var cnt = storedCards.filter(item => item && item.section === section).length;
     const lix = document.createElement("li");
 	lix.innerHTML = `<input type="checkbox" name="${section}" value="${section}" checked><label for="${section}">${section} <span style="font-style: italic; color: #D3D3D3;">(${cnt})</span></label>`;
     list.appendChild(lix);
