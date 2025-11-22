@@ -141,13 +141,23 @@ textarea {
 }
 
 .blink {
-  animation: blinkFade 2s infinite ease-in-out;
+  animation: glowingGrey 2s infinite ease-in-out;
 }
 
-@keyframes blinkFade {
+@keyframes glowingGrey {
   0%   { background-color: transparent; }
   50%  { background-color: #D3D3D3; }
   100% { background-color: transparent; }
+}
+
+#btn-manage-builtin-db.glowing {
+  animation: glowingOrange 2s infinite ease-in-out;
+}
+
+@keyframes glowingOrange {
+  0%   { background-color: Bisque; }
+  50%  { background-color: Orange; }
+  100% { background-color: Bisque; }
 }
 
 #card-number {

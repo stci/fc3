@@ -454,12 +454,14 @@ function manageDB() {
   showWindow("window-database");
   const selected = loadIncludedBuiltinLessons();
   if (selected.length > 0) {
+	document.getElementById("btn-manage-builtin-db").classList.remove("glowing");
 	document.getElementById("db-included-builtin-head").innerText = "Použité vstavané lekcie:";
 	document.getElementById("included-builtin-lessons").innerText =
       selected.map(item => `• ${item}`).join("\n");
   } else {
 	document.getElementById("db-included-builtin-head").innerText = "Nie sú použité žiadne vstavané lekcie.";
 	document.getElementById("included-builtin-lessons").innerText = "";
+	document.getElementById("btn-manage-builtin-db").classList.add("glowing");
   };
 }
 
