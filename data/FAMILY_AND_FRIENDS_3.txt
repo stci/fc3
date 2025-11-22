@@ -8,16 +8,15 @@ strýko;uncle
 brat;brother
 sestra;sister
 bratranec / sesternica;cousin
-To červené auto je *väčšie* ako to modré auto.;The red car is *bigger* than the blue car.
+To červené je *väčšie* ako to modré auto.;The red card is *bigger* than the blue car.
 To zelené auto je *rýchlejšie* ako to červené auto.;The green car is *faster* than the red car.
 väčší;bigger
 menší;smaller
 vyšší;taller
 rýchlo;fast
 rýchlejšie;faster
-pomalo;slow
-pomaly;slowly
-pomalší;slower
+pomaly;slow
+pomalšie;slower
 *Bolo* slnečno.;It *was* sunny.
 Deti *boli* smutné.;The children *were* sad.
 To dievča *bolo* hladné.;The girl *was* hungry.
@@ -139,6 +138,75 @@ pohľadnice;postcards
 odznaky;badges
 ulity;shells
 zbierka;collection
+nudný;boring
 Máš najakú zbierku?;Have you got a collection?
-
 Ja zbieram odznaky a nálepky.;I collect badges and stickers.
+Peter rád pozerá TV. Ja nie, *radšej* čítam knihu.;Peter likes to watch TV. I don't, *I prefer* reading of books.
+Nemám rád sladkosti. *Ani ja*. *Radšej* mám ovocie.;I don't like sweets. *Neither do I*. *I prefer* fruits.
+Mám rád knihy. Aj ja!;I like books. *So do I*!
+Rada fotím. Aj ja!;I like taking photos. *So do I*!
+Nerád hrám basketbal. *Ani ja*. Je nudný.;I don't like playing basketball. *Neither do I*. It's boring.
+Martin rád hrá futbal a *ja tiež*; Martin likes playing football and *so do I*.
+Ema nerada nakupuje a ani Katka nie. Ona radšej...;Ema doesn't like shopping and *neither* Katka *does*. She prefers...
+krajina;country
+Je to studená krajina.;It's cold country.
+Je skvelý!;It's great!
+Viem jazdiť na bicykli.;I can ride a bicycle.
+Moje švihadlo je veľmi dlhé.;My skipping rope is very long.
+Tento pes sedí na veľkom kameni.;This dog is sitting on a big stone.
+Je to veľmi *vzrušujúci* príbeh.;It is very *exciting* story.
+rozhodnúť sa;to decide
+hlavný;main
+postava [vo filme alebo v príbehu];character
+cestovať;to travel
+Rád cestujem do iných krajín.;I like *traveling* to other countries.
+cestovať do Prahy;travel to Prague
+nový;new
+žiť;to live
+veľa ľudí;lots of people
+Je tam veľká búrka.;There is a big storm.
+loď sa potápa;the ship sinks
+plávať;to swim
+ostrov;island
+sám / osamotený;alone
+veci;things
+oblečenie;clothes
+nástroje;tools
+dobrodružstvo;adventure
+dôležitý;important
+lekcia;lesson
+lekcie;lessons
+naučili sa veľa vecí;they learn a lot of things
+zistiť;to find out
+Musím zistiť...;I have to find out...
+všetko;everything
+prežiť;survive
+prvý / prvé;first
+používať;to use
+drevo;wood
+strom;tree
+postaviť;to build
+použiť drevo zo stromov na postavenie domu;use wood from trees to build a house
+počasie;wheather
+vlhko;wet
+presunúť sa;to move
+jaskyňa;cave
+pestovať zeleninu;to grow vegetables
+semienka;seeds
+ovocie;fruit
+loviť zvieratá;to hunt animals
+mäso;meat
+soľ;salt
+čerstvý;fresh
+na dlhý čas;for long time
+nikdy;never
+hladný;hungry
+variť jedlo;to cook a food
+oheň;fire
+rastliny;plants
+papier;paper
+príroda;nature
+užívať si;to enjoy
+život;life
+šanca;chance
+opustiť;to leave
