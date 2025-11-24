@@ -1,7 +1,7 @@
 === Wir Alle 1 | M1 | 1. Wer ist das? #de-DE#
 mačka / mačky;die Katze / die Katzen
-pani;Frau [Das ist Frau Lenz.]
-pán;Herr [Das ist Herr Lenz.]
+pani;Frau [Das ist Frau Stein.]
+pán;Herr [Das ist Herr Stein.]
 volať sa;heißen [ich heiße, du heißt]
 byť;sein [ich bin, du bist]
 ja;ich [Ich bin Martin.]
