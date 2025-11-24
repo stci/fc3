@@ -249,7 +249,8 @@ function revealAnswer() {
   showRateButtons();
   showSpeakButton();
   
-  const answerSpeak = card.answer.replace(/[*]/g, "");
+  // remove special characters (not to be read)
+  const answerSpeak = card.answer.replace(/[*=;/\\]/g, "");
   speak(answerSpeak, card.lang);
 }
 
