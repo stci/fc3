@@ -8,8 +8,8 @@ strýko;uncle
 brat;brother
 sestra;sister
 bratranec / sesternica;cousin
-To červené je *väčšie* ako to modré auto.;The red card is *bigger* than the blue car.
-To zelené auto je *rýchlejšie* ako to červené auto.;The green car is *faster* than the red car.
+Ten červený bicykel je *väčšií* ako ten zelený bicykel.;The red bike is *bigger* than the green bike.
+To zelené auto je *rýchlejšie* ako to modré auto.;The green car is *faster* than the blue car.
 väčší;bigger
 menší;smaller
 vyšší;taller
@@ -47,7 +47,7 @@ záhrada;garden
 ročné obdobie;season
 Zvieratká sa hrajú v lese.;The animals play in the forest.
 Je teplo a slnečno.;It's warm and sunny.
-Medveď Bruno nie je bdelý (zobudený).;Bruno the bear isn't *awake*.
+Medveď Kubo nie je bdelý (zobudený).;Kubo the bear isn't *awake*.
 Ostatné zvieratká spia.;The other animals are asleep.
 bdelý (byť zobudený);awake
 spiaci;asleep
@@ -58,7 +58,7 @@ Nie, (on) nie je.;No, he isn't.
 Áno, (on) je.";Yes, he is.
 Řád ťa spoznávam.;Nice to meet you.
 Ako sa dnes máš?;How are you today?
-Bruno nie je doma.;Bruno isn't at home.
+Peter nie je doma.;Peter isn't at home.
 
 === Family & Friends 3 | 2. My weekend
 čítať komiks;read comics
