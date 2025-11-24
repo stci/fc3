@@ -79,14 +79,13 @@ textarea {
 
 #question {
   font-size: 2rem;
-  font-weight: bold;
-  color: var(--blue);
+  color: #444;
 }
 
 #answer {
   font-size: 2rem;
-  color: #444;
-}
+  font-weight: bold;
+  color: var(--blue);}
 
 #note,
 #rating-note,
