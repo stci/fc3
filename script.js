@@ -26,8 +26,12 @@ const speak = (function () {
         return;
       }
 
-      // Pick a random voice
-      const voice = filtered[Math.floor(Math.random() * filtered.length)];
+      // Pick a voice
+      //const voice = filtered[Math.floor(Math.random() * filtered.length)];
+	  //const voice = voices[voices.length - 1];
+	  const voice = voices.find(v => v.lang === lang && v.name.toLowerCase().includes("google"));
+
+	  //console.log(voice);
       callback(voice);
     }
 
