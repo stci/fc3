@@ -130,11 +130,11 @@ textarea {
 #btn-play-audio {
   font-size: 0.8rem;
   color: black;
-  text-align: left;
+  text-align: center;
   background: transparent;
   margin-top: 0;
   border: none;
-  width: 7rem;
+  width: 8rem;
   border-radius: 4px;
 }
 
