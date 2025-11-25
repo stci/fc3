@@ -14,13 +14,13 @@
 <h1>Speech Synthesis Demo</h1>
 
 <label for="textInput">Enter text:</label>
-<textarea id="textInput" rows="4" cols="50">Hello world!</textarea>
+<textarea id="textInput" rows="4" cols="50">Hallo Welt!</textarea>
 
 <label for="langSelect">Select language:</label>
 <select id="langSelect">
+  <option value="de">German</option>
   <option value="en-GB">English (GB)</option>
   <option value="en-US">English (US)</option>
-  <option value="de-DE">German (DE)</option>
 </select>
 
 <h2>Available Voices</h2>
@@ -31,7 +31,7 @@
 <script>
 // Best voices per language
 const bestVoices = {
-  "de-DE": ["anna (enhanced)", "anna", "katja", "conrad"],
+  "de": ["anna (enhanced)", "anna", "katja", "conrad"],
   "en-GB": ["daniel (enhanced)", "daniel", "zira", "george"],
   "en-US": ["samantha (enhanced)", "samantha", "david", "jenny"]
 };
@@ -61,14 +61,22 @@ function populateVoices(lang) {
   const container = document.getElementById("voicesContainer");
   container.innerHTML = "";
 
-  const filtered = allVoices.filter(v => v.lang.toLowerCase() === lang.toLowerCase());
+  let filtered;
+  if (lang === "de") {
+    // All German voices
+    filtered = allVoices.filter(v => v.lang.toLowerCase().startsWith("de"));
+  } else {
+    filtered = allVoices.filter(v => v.lang.toLowerCase() === lang.toLowerCase());
+  }
+
   if (!filtered.length) {
     container.textContent = "No voices available for this language.";
     return;
   }
 
   filtered.forEach((voice, idx) => {
-    const isBest = bestVoices[lang] && bestVoices[lang].some(b => voice.name.toLowerCase().includes(b));
+    const key = lang === "de" ? "de" : lang;
+    const isBest = bestVoices[key] && bestVoices[key].some(b => voice.name.toLowerCase().includes(b));
     const label = document.createElement("label");
     label.className = isBest ? "best" : "";
     const radio = document.createElement("input");
@@ -92,11 +100,18 @@ function speakText() {
   const selectedRadio = Array.from(radios).find(r => r.checked);
   if (!selectedRadio) return;
 
-  const voice = allVoices.filter(v => v.lang.toLowerCase() === lang.toLowerCase())[selectedRadio.value];
+  let filtered;
+  if (lang === "de") {
+    filtered = allVoices.filter(v => v.lang.toLowerCase().startsWith("de"));
+  } else {
+    filtered = allVoices.filter(v => v.lang.toLowerCase() === lang.toLowerCase());
+  }
+
+  const voice = filtered[selectedRadio.value];
 
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.voice = voice;
-  utterance.lang = lang;
+  utterance.lang = voice.lang; // use voice lang to match accent
 
   speechSynthesis.cancel(); // stop any current speech
   speechSynthesis.speak(utterance);
