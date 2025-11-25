@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speech Synthesis Voice Selector</title>
+<style>
+  body { font-family: sans-serif; padding: 20px; }
+  .best { color: green; font-weight: bold; }
+  label { display: block; margin: 3px 0; }
+</style>
+</head>
+<body>
+<h1>Speech Synthesis Demo</h1>
+
+<label for="textInput">Enter text:</label>
+<textarea id="textInput" rows="4" cols="50">Hello world!</textarea>
+
+<label for="langSelect">Select language:</label>
+<select id="langSelect">
+  <option value="en-GB">English (GB)</option>
+  <option value="en-US">English (US)</option>
+  <option value="de-DE">German (DE)</option>
+</select>
+
+<h2>Available Voices</h2>
+<div id="voicesContainer"></div>
+
+<button id="speakBtn">Speak Text</button>
+
+<script>
+// Best voices per language
+const bestVoices = {
+  "de-DE": ["anna (enhanced)", "anna", "katja", "conrad"],
+  "en-GB": ["daniel (enhanced)", "daniel", "zira", "george"],
+  "en-US": ["samantha (enhanced)", "samantha", "david", "jenny"]
+};
+
+let allVoices = [];
+
+function loadVoices(callback) {
+  allVoices = speechSynthesis.getVoices();
+
+  // iOS may need polling
+  if (!allVoices.length && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
+    let attempts = 0;
+    const interval = setInterval(() => {
+      allVoices = speechSynthesis.getVoices();
+      attempts++;
+      if (allVoices.length || attempts > 20) {
+        clearInterval(interval);
+        callback();
+      }
+    }, 100);
+  } else {
+    callback();
+  }
+}
+
+function populateVoices(lang) {
+  const container = document.getElementById("voicesContainer");
+  container.innerHTML = "";
+
+  const filtered = allVoices.filter(v => v.lang.toLowerCase() === lang.toLowerCase());
+  if (!filtered.length) {
+    container.textContent = "No voices available for this language.";
+    return;
+  }
+
+  filtered.forEach((voice, idx) => {
+    const isBest = bestVoices[lang] && bestVoices[lang].some(b => voice.name.toLowerCase().includes(b));
+    const label = document.createElement("label");
+    label.className = isBest ? "best" : "";
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "voice";
+    radio.value = idx;
+    if (idx === 0) radio.checked = true; // default select first voice
+    label.appendChild(radio);
+    label.appendChild(document.createTextNode(` ${voice.name} ${isBest ? '✅ BEST' : ''}`));
+    container.appendChild(label);
+  });
+}
+
+// Speak the text with selected voice
+function speakText() {
+  const text = document.getElementById("textInput").value.trim();
+  if (!text) return;
+
+  const lang = document.getElementById("langSelect").value;
+  const radios = document.querySelectorAll('input[name="voice"]');
+  const selectedRadio = Array.from(radios).find(r => r.checked);
+  if (!selectedRadio) return;
+
+  const voice = allVoices.filter(v => v.lang.toLowerCase() === lang.toLowerCase())[selectedRadio.value];
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.voice = voice;
+  utterance.lang = lang;
+
+  speechSynthesis.cancel(); // stop any current speech
+  speechSynthesis.speak(utterance);
+}
+
+// Event listeners
+document.getElementById("langSelect").addEventListener("change", () => {
+  populateVoices(document.getElementById("langSelect").value);
+});
+
+document.getElementById("speakBtn").addEventListener("click", speakText);
+
+window.addEventListener('load', () => {
+  loadVoices(() => {
+    populateVoices(document.getElementById("langSelect").value);
+  });
+});
+speechSynthesis.addEventListener('voiceschanged', () => {
+  loadVoices(() => {
+    populateVoices(document.getElementById("langSelect").value);
+  });
+});
+</script>
+</body>
+</html>
