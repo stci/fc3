@@ -14,13 +14,12 @@
 <h1>Speech Synthesis Demo</h1>
 
 <label for="textInput">Enter text:</label>
-<textarea id="textInput" rows="4" cols="50">Hallo Welt!</textarea>
+<textarea id="textInput" rows="4" cols="50">Hello / Hallo!</textarea>
 
 <label for="langSelect">Select language:</label>
 <select id="langSelect">
-  <option value="de">German</option>
-  <option value="en-GB">English (GB)</option>
-  <option value="en-US">English (US)</option>
+  <option value="de">German (all)</option>
+  <option value="en">English (all)</option>
 </select>
 
 <h2>Available Voices</h2>
@@ -32,8 +31,7 @@
 // Best voices per language
 const bestVoices = {
   "de": ["anna (enhanced)", "anna", "katja", "conrad"],
-  "en-GB": ["daniel (enhanced)", "daniel", "zira", "george"],
-  "en-US": ["samantha (enhanced)", "samantha", "david", "jenny"]
+  "en": ["daniel (enhanced)", "daniel", "zira", "george", "samantha (enhanced)", "samantha", "david", "jenny"]
 };
 
 let allVoices = [];
@@ -63,8 +61,9 @@ function populateVoices(lang) {
 
   let filtered;
   if (lang === "de") {
-    // All German voices
     filtered = allVoices.filter(v => v.lang.toLowerCase().startsWith("de"));
+  } else if (lang === "en") {
+    filtered = allVoices.filter(v => v.lang.toLowerCase().startsWith("en"));
   } else {
     filtered = allVoices.filter(v => v.lang.toLowerCase() === lang.toLowerCase());
   }
@@ -75,8 +74,7 @@ function populateVoices(lang) {
   }
 
   filtered.forEach((voice, idx) => {
-    const key = lang === "de" ? "de" : lang;
-    const isBest = bestVoices[key] && bestVoices[key].some(b => voice.name.toLowerCase().includes(b));
+    const isBest = bestVoices[lang] && bestVoices[lang].some(b => voice.name.toLowerCase().includes(b));
     const label = document.createElement("label");
     label.className = isBest ? "best" : "";
     const radio = document.createElement("input");
@@ -85,7 +83,7 @@ function populateVoices(lang) {
     radio.value = idx;
     if (idx === 0) radio.checked = true; // default select first voice
     label.appendChild(radio);
-    label.appendChild(document.createTextNode(` ${voice.name} ${isBest ? '✅ BEST' : ''}`));
+    label.appendChild(document.createTextNode(` ${voice.name} (${voice.lang}) ${isBest ? '✅ BEST' : ''}`));
     container.appendChild(label);
   });
 }
@@ -103,6 +101,8 @@ function speakText() {
   let filtered;
   if (lang === "de") {
     filtered = allVoices.filter(v => v.lang.toLowerCase().startsWith("de"));
+  } else if (lang === "en") {
+    filtered = allVoices.filter(v => v.lang.toLowerCase().startsWith("en"));
   } else {
     filtered = allVoices.filter(v => v.lang.toLowerCase() === lang.toLowerCase());
   }
@@ -111,7 +111,7 @@ function speakText() {
 
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.voice = voice;
-  utterance.lang = voice.lang; // use voice lang to match accent
+  utterance.lang = voice.lang;
 
   speechSynthesis.cancel(); // stop any current speech
   speechSynthesis.speak(utterance);
