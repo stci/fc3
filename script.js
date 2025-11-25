@@ -7,16 +7,16 @@ let cards = [];
 let index = 0;
 
 function getBestVoice(lang, callback) {
-  // iOS-specific preferred voices to avoid low-quality voices
-  const iOSPreferredVoices = {
-    "de-de": ["Anna (Enhanced)", "Anna"],
-    "en-gb": ["Daniel", "Kate"]
+  // iOS-only best voices
+  const iOSBestVoice = {
+    "de-de": "Anna (Enhanced)",
+    "en-gb": "Daniel"
   };
 
   function loadVoices() {
     let voices = speechSynthesis.getVoices();
 
-    // On iOS, sometimes voices appear slightly delayed, try polling
+    // iOS may need polling
     if (!voices.length && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
       let attempts = 0;
       const interval = setInterval(() => {
@@ -42,34 +42,35 @@ function getBestVoice(lang, callback) {
       return n.includes("multilingual") || n.includes("universal");
     }
 
-    // Priority 1: iOS preferred voices
-    const iosPrefs = iOSPreferredVoices[langPrefix] || [];
-    let voice = voices.find(v =>
-      v.lang.toLowerCase() === langPrefix &&
-      iosPrefs.some(p => v.name.toLowerCase().includes(p.toLowerCase()))
-    );
-    if (voice) return callback(voice);
+    // iOS: pick the single best known voice if available
+    const best = iOSBestVoice[langPrefix];
+    if (best) {
+      const voice = voices.find(v =>
+        v.name.toLowerCase() === best.toLowerCase()
+      );
+      if (voice) return callback(voice);
+    }
 
-    // Priority 2: Hard-coded preferred voices
+    // Fallback: your existing preferred voices
     const preferred = {
       "de-de": ["katja", "conrad"],
-      "en-gb": [] // add any if needed
+      "en-gb": [] // add if needed
     }[langPrefix] || [];
 
-    voice = voices.find(v =>
+    let voice = voices.find(v =>
       v.lang.toLowerCase() === langPrefix &&
       !isBadMultilingual(v) &&
       preferred.some(p => v.name.toLowerCase().includes(p))
     );
     if (voice) return callback(voice);
 
-    // Priority 3: Other native voices (not multilingual)
+    // Other native voices (not multilingual)
     voice = voices.find(v =>
       v.lang.toLowerCase() === langPrefix && !isBadMultilingual(v)
     );
     if (voice) return callback(voice);
 
-    // Fallbacks for related locales (German example)
+    // German fallbacks
     if (langPrefix === "de-de") {
       ["de-at", "de-ch"].some(fbLang => {
         voice = voices.find(v =>
@@ -80,7 +81,7 @@ function getBestVoice(lang, callback) {
       if (voice) return callback(voice);
     }
 
-    // Last fallback: any voice matching lang prefix
+    // Last fallback: any voice starting with lang prefix
     voice = voices.find(v => v.lang.toLowerCase().startsWith(langPrefix));
     if (voice) return callback(voice);
 
@@ -93,6 +94,7 @@ function getBestVoice(lang, callback) {
     speechSynthesis.addEventListener("voiceschanged", loadVoices, { once: true });
   }
 }
+
 
 const speak = (function () {
   let lastUsedData;
