@@ -135,10 +135,52 @@ function storeCards(cards) {
   localStorage.setItem("flashcards", JSON.stringify(cleaned));
 }
 
+function convertRawDataFormat(rawText) {
+  return rawText
+    .split("\n")
+    .map(line => {
+      const trimmed = line.trim();
+
+      // prázdny riadok necháme tak
+      if (trimmed === "") return line;
+
+      // sekčné nadpisy necháme tak
+      if (trimmed.startsWith("===")) return line;
+
+      // ak je tam "=" tak nerobíme nič
+      if (trimmed.includes("=")) return line;
+
+      // ak je tam ";" nahradíme ju za " = "
+      if (trimmed.includes(";")) {
+        return line.replace(";", " = ");
+      }
+
+      // inak vraciame nezmenené
+      return line;
+    })
+    .join("\n");
+}
+
 // load data from storage
 function loadUserRaw() {
-  const rawdata = localStorage.getItem("rawdata");
-  return rawdata;
+  const rawdata = convertRawDataFormat(localStorage.getItem("rawdata")) || `=== Pozdravy
+ahoj = hello
+dobré ráno = good *morning*
+dobrý večer = good *evening*
+dobrý deň [doobeda] = good morning
+dobrý deň [poobede] = good evening [from noon]
+
+=== Rodina
+rodina = family
+mama = mother
+otec = father`;
+
+  const rawdataV2 = convertRawDataFormat(rawdata);
+  if (rawdataV2 !== rawdata) {
+	storeUserRaw(rawdataV2);
+  }
+
+  return rawdataV2;
 }
 
 // save data to storage
@@ -333,7 +375,8 @@ function parseData(rawdata) {
   let currentLesson = "";
 
   const htmlTagPattern = /<\/?[a-z][\s\S]*?>/i;
-  const pattern = /^(=== .+|([^;\[\]]+(\[.*?\])?);([^;\[\]]+(\[.*?\])?))$/;
+  //const pattern = /^(=== .+|([^;\[\]]+(\[.*?\])?)=([^;\[\]]+(\[.*?\])?))$/;
+  const pattern = /^(=== .+|[^=\[]+(?: \[[^\]]+\])?\s*=\s*[^=\[]+(?: \[[^\]]+\])?)$/;
   
   lines.forEach((line, lineIDX) => {
     if (!line.trim()) return;
@@ -351,7 +394,7 @@ function parseData(rawdata) {
 	  currentLesson = parseLineLesson(line);
 	  newLessons.push(currentLesson);
     } else {
-      const [qraw, araw] = line.split(";").map(x => x.trim());
+      const [qraw, araw] = line.split("=").map(x => x.trim());
 	  let match = qraw.match(/\[(.*?)\]/);
 	  const qnote = match ? `(${match[1]})` : "";
 	  const q = qraw.replace(/\[.*?\]/, '').trim();
@@ -612,17 +655,7 @@ function selectNoneLesson() {
 // 🧭 Inicializácia
 function init() {
   //document.getElementById("rawData").value = localStorage.getItem("rawdata") || `=== Pozdravy
-  document.getElementById("rawData").value = loadUserRaw() || `=== Pozdravy
-ahoj;hello
-dobré ráno;good *morning*
-dobrý večer;good *evening*
-dobrý deň [doobeda];good morning
-dobrý deň [poobede];good evening [from noon]
-
-=== Rodina
-rodina;family
-mama;mother
-otec;father`;
+  document.getElementById("rawData").value = loadUserRaw();
 
   // Pridanie listenerov
   document.getElementById("btn-manage-db").addEventListener("click", manageDB);
