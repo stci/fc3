@@ -9,8 +9,8 @@ let index = 0;
 function getBestVoice(lang, callback) {
   // iOS-only best voices
   const iOSBestVoice = {
-    "de-de": "Anna (Enhanced)",
-    "en-gb": "Daniel"
+    "en-gb": "Daniel"  // English GB stays the same
+    // German handled separately below
   };
 
   function loadVoices() {
@@ -42,13 +42,25 @@ function getBestVoice(lang, callback) {
       return n.includes("multilingual") || n.includes("universal");
     }
 
-    // iOS: pick the single best known voice if available
-    const best = iOSBestVoice[langPrefix];
-    if (best) {
-      const voice = voices.find(v =>
-        v.name.toLowerCase() === best.toLowerCase()
-      );
-      if (voice) return callback(voice);
+    // iOS: pick best German or English voice
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+      if (langPrefix === "de-de") {
+        // Try Enhanced first, then fallback to any de-DE
+        let voice = voices.find(v =>
+          v.lang.toLowerCase() === "de-de" &&
+          v.name.toLowerCase().includes("enhanced")
+        );
+        if (!voice) {
+          voice = voices.find(v => v.lang.toLowerCase() === "de-de");
+        }
+        if (voice) return callback(voice);
+      } else if (iOSBestVoice[langPrefix]) {
+        const best = iOSBestVoice[langPrefix];
+        const voice = voices.find(v =>
+          v.name.toLowerCase() === best.toLowerCase()
+        );
+        if (voice) return callback(voice);
+      }
     }
 
     // Fallback: your existing preferred voices
@@ -94,7 +106,6 @@ function getBestVoice(lang, callback) {
     speechSynthesis.addEventListener("voiceschanged", loadVoices, { once: true });
   }
 }
-
 
 const speak = (function () {
   let lastUsedData;
