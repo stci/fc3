@@ -1,63 +1,63 @@
 === Wir Alle 1 | M1 | 1. Wer ist das? #de-DE#
-mačka / mačky;die Katze / die Katzen
-pani;Frau [Das ist Frau Stein.]
-pán;Herr [Das ist Herr Stein.]
-volať sa;heißen [ich heiße, du heißt]
-byť;sein [ich bin, du bist]
-ja;ich [Ich bin Martin.]
-ty;du [Wer bist du?]
-To je...;Das ist... [Das ist Micka.]
-jeden / jedna;ein / eine [Micka ist eine Katze.]
-a [spojka];und [Ich bin Martin und wer bist du?]
-Kto?;Wer? [Wer ist das?]
-Ako?;Wie? [Wie heißt du?]
-Dobré ráno!;Guten Morgen!
-Ahoj!;Hallo! / Hi!
-To sme my.;Das sind wir.
-rok / roky;das Jahr / die Jahre [Ich bin 13 Jahre alt.]
-nový;neu [Peter ist neu in Bratislava]
-tu;hier [Peter ist auch hier]
-tiež;auch [Ich bin auch 13.]
-*Koľko* máš *rokov*?;*Wie alt* bist du?
-mama / mamy;die Mama / die Mamas [Hallo, Mama!]
-priateľ / priatelia;der Freund / die Freunde [Ist Simon ein Freund von Martin?]
-priateľka / priateľky;die Freundin / die Freundinnen [Ema ist die Freundin von Eli.]
-učiteľ / učitelia;der Lehrer / die Lehrer
-učiteľka / učiteľky;die Lehrerin / die Lehrerinnen
-on;er [Er heißt Peter.]
-ona;sie [Sie ist Ema.]
-Martinov priateľ;ein Freund von Martin
-Dobrý deň!;Guten Morgen!
-Dovidenia!;Auf Wiedersehen!
-Ahoj! [pri rozlúčení];Tschuss!
-Vidíme sa zajtra!;Bis morgen!
+mačka / mačky = die Katze / die Katzen
+pani = Frau [Das ist Frau Stein.]
+pán = Herr [Das ist Herr Stein.]
+volať sa = heißen [ich heiße, du heißt]
+byť = sein [ich bin, du bist]
+ja = ich [Ich bin Martin.]
+ty = du [Wer bist du?]
+To je... = Das ist... [Das ist Micka.]
+jeden / jedna = ein / eine [Micka ist eine Katze.]
+a [spojka] = und [Ich bin Martin und wer bist du?]
+Kto? = Wer? [Wer ist das?]
+Ako? = Wie? [Wie heißt du?]
+Dobré ráno! = Guten Morgen!
+Ahoj! = Hallo! / Hi!
+To sme my. = Das sind wir.
+rok / roky = das Jahr / die Jahre [Ich bin 13 Jahre alt.]
+nový = neu [Peter ist neu in Bratislava]
+tu = hier [Peter ist auch hier]
+tiež = auch [Ich bin auch 13.]
+*Koľko* máš *rokov*? = *Wie alt* bist du?
+mama / mamy = die Mama / die Mamas [Hallo, Mama!]
+priateľ / priatelia = der Freund / die Freunde [Ist Simon ein Freund von Martin?]
+priateľka / priateľky = die Freundin / die Freundinnen [Ema ist die Freundin von Eli.]
+učiteľ / učitelia = der Lehrer / die Lehrer
+učiteľka / učiteľky = die Lehrerin / die Lehrerinnen
+on = er [Er heißt Peter.]
+ona = sie [Sie ist Ema.]
+Martinov priateľ = ein Freund von Martin
+Dobrý deň! = Guten Morgen!
+Dovidenia! = Auf Wiedersehen!
+Ahoj! [pri rozlúčení] = Tschuss!
+Vidíme sa zajtra! = Bis morgen!
 
 === Wir Alle 1 | M1 | 2. Das ist Meine Familie #de-DE#
-rodina / rodiny;die Familie / die Familien
-matka / matky;die Mutter / die Mütter [Die Mutter von Martin  Katarina.]
-otec / otcovia;der Vater / die Väter
-ocko / ockovia [otecko];der Papa / die Papas
-sestra / sestry;die Schwester / die Schwestern
-brat / bratia [dedko];der Bruder / die Brüder
-babka / babky [stará mama];die Oma / die Omas
-dedko / dedkovia [starý otec];der Opa / die Opas
-meno / mená;der Name / die Namen
-môj / moja;mein, meine [Das ist mein Vater.]
-tvoj / tvoje;dein / deine [Wie heißt deine Mutter?]
-rodičia;die Eltern [Das sind meine Eltern.]
-starý rodičia;die Großeltern [Sind das die Großeltern von Ema?]
-teta / tety;die Tante / die Tanten [Peter hat zwei Tanten.]
-strýko / strýkovia;der Onkel / die Onkel [Das ist mein Onkel Michal.]
-bratranec / bratranci;der Cousin / die Cousinen [Meine Cousin ist 10 Jahre alt.]
-sesternica / sesternice;die Cousine / die Cousinen [Hast du auch eine Cousine?]
-dieťa / deti;das Kind / die Kinder
-bábätko / bábätká;das Baby / die Babys [Mein Bruder ist noch ein Baby.]
-číslo / čísla;die Nummer / die Nummern
-oni / ony;sie [Sie heißen Martin und Peter.]
-ten, tá, to;der, die, das [Wie alt ist der Mann, die Frau, das Baby?]
-správne;richtig
-chybne;falsch
-ešte;noch [Er ist noch ein Baby.]
-alebo;oder [Richtig oder falsch?]
-áno;ja [Ja, ich bin Martin.]
-nie;nein
+rodina / rodiny = die Familie / die Familien
+matka / matky = die Mutter / die Mütter [Die Mutter von Martin  Katarina.]
+otec / otcovia = der Vater / die Väter
+ocko / ockovia [otecko] = der Papa / die Papas
+sestra / sestry = die Schwester / die Schwestern
+brat / bratia [dedko] = der Bruder / die Brüder
+babka / babky [stará mama] = die Oma / die Omas
+dedko / dedkovia [starý otec] = der Opa / die Opas
+meno / mená = der Name / die Namen
+môj / moja = mein, meine [Das ist mein Vater.]
+tvoj / tvoje = dein / deine [Wie heißt deine Mutter?]
+rodičia = die Eltern [Das sind meine Eltern.]
+starý rodičia = die Großeltern [Sind das die Großeltern von Ema?]
+teta / tety = die Tante / die Tanten [Peter hat zwei Tanten.]
+strýko / strýkovia = der Onkel / die Onkel [Das ist mein Onkel Michal.]
+bratranec / bratranci = der Cousin / die Cousinen [Meine Cousin ist 10 Jahre alt.]
+sesternica / sesternice = die Cousine / die Cousinen [Hast du auch eine Cousine?]
+dieťa / deti = das Kind / die Kinder
+bábätko / bábätká = das Baby / die Babys [Mein Bruder ist noch ein Baby.]
+číslo / čísla = die Nummer / die Nummern
+oni / ony = sie [Sie heißen Martin und Peter.]
+ten, tá, to = der, die, das [Wie alt ist der Mann, die Frau, das Baby?]
+správne = richtig
+chybne = falsch
+ešte = noch [Er ist noch ein Baby.]
+alebo = oder [Richtig oder falsch?]
+áno = ja [Ja, ich bin Martin.]
+nie = nein
