@@ -7,66 +7,81 @@ let cards = [];
 let index = 0;
 
 function getBestVoice(lang, callback) {
+  // iOS-specific preferred voices to avoid low-quality voices
+  const iOSPreferredVoices = {
+    "de-de": ["Anna (Enhanced)", "Anna"],
+    "en-gb": ["Daniel", "Kate"]
+  };
+
   function loadVoices() {
-    const voices = speechSynthesis.getVoices();
+    let voices = speechSynthesis.getVoices();
+
+    // On iOS, sometimes voices appear slightly delayed, try polling
+    if (!voices.length && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
+      let attempts = 0;
+      const interval = setInterval(() => {
+        voices = speechSynthesis.getVoices();
+        attempts++;
+        if (voices.length || attempts > 20) { // ~2 seconds max
+          clearInterval(interval);
+          selectVoice(voices);
+        }
+      }, 100);
+    } else {
+      selectVoice(voices);
+    }
+  }
+
+  function selectVoice(voices) {
     if (!voices.length) return callback(null);
 
     const langPrefix = lang.toLowerCase();
 
-    // Hard block multilingual voices
     function isBadMultilingual(v) {
       const n = v.name.toLowerCase();
-      return (
-        n.includes("multilingual") ||
-        n.includes("universal")
-      );
+      return n.includes("multilingual") || n.includes("universal");
     }
 
-    // Priority 1: Best native German voices
-    const germanPreferred = [
-      "katja",    // Microsoft Katja Online (Natural)
-      "conrad"    // Microsoft Conrad Online (Natural)
-    ];
-
+    // Priority 1: iOS preferred voices
+    const iosPrefs = iOSPreferredVoices[langPrefix] || [];
     let voice = voices.find(v =>
-      v.lang.toLowerCase() === "de-de" &&
+      v.lang.toLowerCase() === langPrefix &&
+      iosPrefs.some(p => v.name.toLowerCase().includes(p.toLowerCase()))
+    );
+    if (voice) return callback(voice);
+
+    // Priority 2: Hard-coded preferred voices
+    const preferred = {
+      "de-de": ["katja", "conrad"],
+      "en-gb": [] // add any if needed
+    }[langPrefix] || [];
+
+    voice = voices.find(v =>
+      v.lang.toLowerCase() === langPrefix &&
       !isBadMultilingual(v) &&
-      germanPreferred.some(p => v.name.toLowerCase().includes(p))
+      preferred.some(p => v.name.toLowerCase().includes(p))
     );
     if (voice) return callback(voice);
 
-    // Priority 2: Other de-DE native voices (but not multilingual)
+    // Priority 3: Other native voices (not multilingual)
     voice = voices.find(v =>
-      v.lang.toLowerCase() === "de-de" &&
-      !isBadMultilingual(v)
+      v.lang.toLowerCase() === langPrefix && !isBadMultilingual(v)
     );
     if (voice) return callback(voice);
 
-    // Priority 3: de-AT (Austrian German)
-    voice = voices.find(v =>
-      v.lang.toLowerCase() === "de-at" &&
-      !isBadMultilingual(v)
-    );
-    if (voice) return callback(voice);
+    // Fallbacks for related locales (German example)
+    if (langPrefix === "de-de") {
+      ["de-at", "de-ch"].some(fbLang => {
+        voice = voices.find(v =>
+          v.lang.toLowerCase() === fbLang && !isBadMultilingual(v)
+        );
+        return !!voice;
+      });
+      if (voice) return callback(voice);
+    }
 
-    // Priority 4: de-CH (Swiss German)
-    voice = voices.find(v =>
-      v.lang.toLowerCase() === "de-ch" &&
-      !isBadMultilingual(v)
-    );
-    if (voice) return callback(voice);
-
-    // Priority 5: Any German or German-related voice
-    voice = voices.find(v =>
-      v.lang.toLowerCase().startsWith("de") &&
-      !isBadMultilingual(v)
-    );
-    if (voice) return callback(voice);
-
-    // Last fallback: ANY matching language
-    voice = voices.find(v =>
-      v.lang.toLowerCase().startsWith(langPrefix)
-    );
+    // Last fallback: any voice matching lang prefix
+    voice = voices.find(v => v.lang.toLowerCase().startsWith(langPrefix));
     if (voice) return callback(voice);
 
     callback(null);
