@@ -6,43 +6,81 @@ let builtInData = {};
 let cards = [];
 let index = 0;
 
-// speak function
+function getBestVoice(lang, callback) {
+  function loadVoices() {
+    const voices = speechSynthesis.getVoices();
+    if (!voices.length) return callback(null);
+
+    const langPrefix = lang.toLowerCase();
+
+    // Hard block multilingual voices
+    function isBadMultilingual(v) {
+      const n = v.name.toLowerCase();
+      return (
+        n.includes("multilingual") ||
+        n.includes("universal")
+      );
+    }
+
+    // Priority 1: Best native German voices
+    const germanPreferred = [
+      "katja",    // Microsoft Katja Online (Natural)
+      "conrad"    // Microsoft Conrad Online (Natural)
+    ];
+
+    let voice = voices.find(v =>
+      v.lang.toLowerCase() === "de-de" &&
+      !isBadMultilingual(v) &&
+      germanPreferred.some(p => v.name.toLowerCase().includes(p))
+    );
+    if (voice) return callback(voice);
+
+    // Priority 2: Other de-DE native voices (but not multilingual)
+    voice = voices.find(v =>
+      v.lang.toLowerCase() === "de-de" &&
+      !isBadMultilingual(v)
+    );
+    if (voice) return callback(voice);
+
+    // Priority 3: de-AT (Austrian German)
+    voice = voices.find(v =>
+      v.lang.toLowerCase() === "de-at" &&
+      !isBadMultilingual(v)
+    );
+    if (voice) return callback(voice);
+
+    // Priority 4: de-CH (Swiss German)
+    voice = voices.find(v =>
+      v.lang.toLowerCase() === "de-ch" &&
+      !isBadMultilingual(v)
+    );
+    if (voice) return callback(voice);
+
+    // Priority 5: Any German or German-related voice
+    voice = voices.find(v =>
+      v.lang.toLowerCase().startsWith("de") &&
+      !isBadMultilingual(v)
+    );
+    if (voice) return callback(voice);
+
+    // Last fallback: ANY matching language
+    voice = voices.find(v =>
+      v.lang.toLowerCase().startsWith(langPrefix)
+    );
+    if (voice) return callback(voice);
+
+    callback(null);
+  }
+
+  if (speechSynthesis.getVoices().length > 0) {
+    loadVoices();
+  } else {
+    speechSynthesis.addEventListener("voiceschanged", loadVoices, { once: true });
+  }
+}
+
 const speak = (function () {
   let lastUsedData;
-
-  // Helper: returns a random voice matching the language
-  function getRandomVoiceForLang(lang, callback) {
-    function loadVoices() {
-      const voices = window.speechSynthesis.getVoices();
-
-      // Filter voices by language (e.g., "en", "en-US", "cs")
-      const filtered = voices.filter(v =>
-        v.lang.toLowerCase().startsWith(lang.toLowerCase())
-      );
-
-      if (filtered.length === 0) {
-        console.warn("No matching voices for language:", lang);
-        callback(null);
-        return;
-      }
-
-      // Pick a voice
-      //const voice = filtered[Math.floor(Math.random() * filtered.length)];
-	  //const voice = voices[voices.length - 1];
-	  const voice = voices.find(v => v.lang === lang && v.name.toLowerCase().includes("google"));
-
-	  //console.log(voice);
-      callback(voice);
-    }
-
-    // Voices already loaded?
-    if (speechSynthesis.getVoices().length > 0) {
-      loadVoices();
-    } else {
-      // Wait for voices load event
-      speechSynthesis.addEventListener("voiceschanged", loadVoices, { once: true });
-    }
-  }
 
   return function (msg, language = defaultLanguage) {
     if (msg !== undefined) {
@@ -53,16 +91,17 @@ const speak = (function () {
     if (!window.speechSynthesis) return;
 
     try {
-      // Cancel any ongoing speech
+      // stop any current speech
       window.speechSynthesis.cancel();
 
-      // Now load a random voice and speak
-      getRandomVoiceForLang(lastUsedData.lang, function (voice) {
+      // pick stable best voice
+      getBestVoice(lastUsedData.lang, function (voice) {
         const utter = new SpeechSynthesisUtterance(lastUsedData.msg);
         utter.lang = lastUsedData.lang;
 
         if (voice) utter.voice = voice;
 
+		//console.log(utter);
         speechSynthesis.speak(utter);
       });
 
