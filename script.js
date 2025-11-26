@@ -565,6 +565,10 @@ function showWindow(id) {
 
 function manageDB() {
   showWindow("window-database");
+  document.getElementById("btn-manage-db").classList.add("hidden");
+  document.getElementById("btn-select-lessons").classList.remove("hidden");
+  document.getElementById("btn-manage-builtin-db").classList.remove("hidden");
+
   const selected = loadIncludedBuiltinLessons();
   if (selected.length > 0) {
 	document.getElementById("btn-manage-builtin-db").classList.remove("glowing");
@@ -592,6 +596,7 @@ function manageBuiltInDB() {
   });
   
   showWindow("window-builtin");
+  document.getElementById("btn-manage-builtin-db").classList.add("hidden");
 }
 
 function actualizeBuiltinDB() {
@@ -612,7 +617,7 @@ function includeBuiltInData() {
   storeIncludedBuiltinLessons(selected);
   storeCards(storedCards);
   //document.getElementById("included-builtin-lessons").innerText = selected.join("\n");
-  manageDB();
+  showLessons();
 }
 
 /*
@@ -637,6 +642,9 @@ function startTraining() {
     (a, b) => (a.metadata.score - b.metadata.score) || (Math.random() - 0.5)
   );
   index = 0;
+  document.getElementById("btn-manage-db").classList.remove("hidden");
+  document.getElementById("btn-select-lessons").classList.remove("hidden");
+  document.getElementById("btn-manage-builtin-db").classList.add("hidden");
   showWindow("window-cards");
   showCard();
 }
@@ -668,6 +676,10 @@ function showLessons() {
 	  manageDB();
 	  return;
   };
+  
+  document.getElementById("btn-manage-db").classList.remove("hidden");
+  document.getElementById("btn-select-lessons").classList.add("hidden");
+
   
   const list = document.getElementById("lessons-check-list");
   list.innerHTML = "";
