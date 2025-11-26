@@ -1,139 +1,233 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Speech Synthesis Voice Selector</title>
+<meta charset="UTF-8" />
+<title>Speech Synthesis Demo (Smart Voice Selection)</title>
 <style>
-  body { font-family: sans-serif; padding: 20px; }
-  .best { color: green; font-weight: bold; }
-  label { display: block; margin: 3px 0; }
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+#voices { margin-top: 10px; }
+.auto-selected {
+  padding: 5px;
+  font-weight: bold;
+  color: green;
+}
 </style>
 </head>
 <body>
-<h1>Speech Synthesis Demo</h1>
 
-<label for="textInput">Enter text:</label>
-<textarea id="textInput" rows="4" cols="50">Hello / Hallo!</textarea>
+<h2>Speech Synthesis Demo</h2>
 
-<label for="langSelect">Select language:</label>
-<select id="langSelect">
-  <option value="de">German (all)</option>
-  <option value="en">English (all)</option>
+<label>Language:</label>
+<select id="lang">
+  <option value="en-GB">English (en-GB)</option>
+  <option value="de-DE">German (de-DE)</option>
 </select>
 
-<h2>Available Voices</h2>
-<div id="voicesContainer"></div>
+<br><br>
 
-<button id="speakBtn">Speak Text</button>
+<label>Text to speak:</label><br>
+<textarea id="text" rows="4" cols="60">Hello! This is a test.</textarea>
+
+<br><br>
+
+<div id="auto" class="auto-selected"></div>
+
+<label>Available voices (filtered):</label>
+<div id="voices"></div>
+
+<br>
+
+<button id="speakBtn">Speak</button>
 
 <script>
-// Best voices per language
-const bestVoices = {
-  "de": ["anna (enhanced)", "anna", "katja", "conrad"],
-  "en": ["daniel (enhanced)", "daniel", "zira", "george", "samantha (enhanced)", "samantha", "david", "jenny"]
-};
+/* -----------------------------------------------------------
+   SMART CROSS-PLATFORM BEST VOICE SELECTOR
+   ----------------------------------------------------------- */
+function getBestVoice(lang, callback) {
+  const ua = navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(ua);
 
-let allVoices = [];
+  const iOSBestVoice = {
+    "en-gb": "daniel"
+  };
 
-function loadVoices(callback) {
-  allVoices = speechSynthesis.getVoices();
+  function loadVoices() {
+    let voices = speechSynthesis.getVoices();
 
-  // iOS may need polling
-  if (!allVoices.length && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
-    let attempts = 0;
-    const interval = setInterval(() => {
-      allVoices = speechSynthesis.getVoices();
-      attempts++;
-      if (allVoices.length || attempts > 20) {
-        clearInterval(interval);
-        callback();
+    if (isIOS && !voices.length) {
+      let attempts = 0;
+      const interval = setInterval(() => {
+        voices = speechSynthesis.getVoices();
+        attempts++;
+        if (voices.length || attempts > 20) {
+          clearInterval(interval);
+          selectVoice(voices);
+        }
+      }, 100);
+    } else {
+      selectVoice(voices);
+    }
+  }
+
+  function selectVoice(voices) {
+    if (!voices.length) return callback(null);
+    const langPrefix = lang.toLowerCase();
+
+    function isBadMultilingual(v) {
+      const n = v.name.toLowerCase();
+      return n.includes("multilingual") || n.includes("universal");
+    }
+
+    /* iOS Logic */
+    if (isIOS) {
+      if (langPrefix.startsWith("de")) {
+        const iOSGermanPriority = ["anna", "markus", "petra", "klara"];
+        for (const name of iOSGermanPriority) {
+          const v = voices.find(x =>
+            x.name.toLowerCase().includes(name) &&
+            x.lang.toLowerCase().startsWith("de")
+          );
+          if (v) return callback(v);
+        }
+        let v = voices.find(x =>
+          x.lang.toLowerCase().startsWith("de") &&
+          !isBadMultilingual(x)
+        );
+        if (v) return callback(v);
+
+        v = voices.find(x => x.lang.toLowerCase() === "de-at");
+        if (v) return callback(v);
+        v = voices.find(x => x.lang.toLowerCase() === "de-ch");
+        if (v) return callback(v);
       }
-    }, 100);
-  } else {
-    callback();
+
+      if (iOSBestVoice[langPrefix]) {
+        const target = iOSBestVoice[langPrefix];
+        const v = voices.find(x =>
+          x.name.toLowerCase().includes(target) &&
+          x.lang.toLowerCase().startsWith("en")
+        );
+        if (v) return callback(v);
+      }
+    }
+
+    /* MS Edge logic */
+    if (/Edg\//.test(ua)) {
+      const v = voices.find(x =>
+        x.lang.toLowerCase() === langPrefix &&
+        !isBadMultilingual(x) &&
+        x.name.toLowerCase().includes("online") &&
+        x.name.toLowerCase().includes("natural")
+      );
+      if (v) return callback(v);
+    }
+
+    /* Android: exact locale */
+    const androidExact = voices.find(v =>
+      v.lang.toLowerCase() === langPrefix &&
+      !isBadMultilingual(v)
+    );
+    if (androidExact) return callback(androidExact);
+
+    /* Preferred voices */
+    const preferred = {
+      "de-de": ["katja", "conrad"],
+      "en-gb": []
+    }[langPrefix] || [];
+
+    let v = voices.find(x =>
+      x.lang.toLowerCase() === langPrefix &&
+      !isBadMultilingual(x) &&
+      preferred.some(p => x.name.toLowerCase().includes(p))
+    );
+    if (v) return callback(v);
+
+    /* Native voices */
+    v = voices.find(x =>
+      x.lang.toLowerCase() === langPrefix &&
+      !isBadMultilingual(x)
+    );
+    if (v) return callback(v);
+
+    /* German fallbacks */
+    if (langPrefix === "de-de") {
+      v = voices.find(x => x.lang.toLowerCase() === "de-at");
+      if (v) return callback(v);
+      v = voices.find(x => x.lang.toLowerCase() === "de-ch");
+      if (v) return callback(v);
+    }
+
+    /* Last fallback */
+    v = voices.find(x => x.lang.toLowerCase().startsWith(langPrefix));
+    if (v) return callback(v);
+
+    callback(null);
   }
+
+  if (speechSynthesis.getVoices().length > 0) loadVoices();
+  else speechSynthesis.addEventListener("voiceschanged", loadVoices, { once: true });
 }
 
-function populateVoices(lang) {
-  const container = document.getElementById("voicesContainer");
-  container.innerHTML = "";
+/* -----------------------------------------------------------
+   DEMO UI LOGIC
+   ----------------------------------------------------------- */
+const langSelect = document.getElementById("lang");
+const voicesDiv = document.getElementById("voices");
+const autoDiv = document.getElementById("auto");
+let selectedVoice = null;
 
-  let filtered;
-  if (lang === "de") {
-    filtered = allVoices.filter(v => v.lang.toLowerCase().startsWith("de"));
-  } else if (lang === "en") {
-    filtered = allVoices.filter(v => v.lang.toLowerCase().startsWith("en"));
-  } else {
-    filtered = allVoices.filter(v => v.lang.toLowerCase() === lang.toLowerCase());
-  }
+function refreshVoiceUI() {
+  const lang = langSelect.value.toLowerCase();
 
-  if (!filtered.length) {
-    container.textContent = "No voices available for this language.";
-    return;
-  }
+  getBestVoice(lang, best => {
+    selectedVoice = best;
 
-  filtered.forEach((voice, idx) => {
-    const isBest = bestVoices[lang] && bestVoices[lang].some(b => voice.name.toLowerCase().includes(b));
-    const label = document.createElement("label");
-    label.className = isBest ? "best" : "";
-    const radio = document.createElement("input");
-    radio.type = "radio";
-    radio.name = "voice";
-    radio.value = idx;
-    if (idx === 0) radio.checked = true; // default select first voice
-    label.appendChild(radio);
-    label.appendChild(document.createTextNode(` ${voice.name} (${voice.lang}) ${isBest ? '✅ BEST' : ''}`));
-    container.appendChild(label);
+    autoDiv.textContent = best
+      ? "Auto-selected voice: " + best.name + " (" + best.lang + ")"
+      : "No auto-selected voice found";
+
+    const voices = speechSynthesis.getVoices();
+
+    const filtered = voices.filter(v => v.lang.toLowerCase().startsWith(lang.substring(0,2)));
+
+    voicesDiv.innerHTML = "";
+
+    filtered.forEach(v => {
+      const id = "v_" + Math.random();
+      const checked = selectedVoice && selectedVoice.name === v.name ? "checked" : "";
+
+      voicesDiv.innerHTML += `
+        <label>
+          <input type="radio" name="voice" value="${v.name}" ${checked}>
+          ${v.name} (${v.lang})
+        </label><br>
+      `;
+    });
+
+    voicesDiv.querySelectorAll("input[name=voice]").forEach(r => {
+      r.addEventListener("change", () => {
+        const voices = speechSynthesis.getVoices();
+        selectedVoice = voices.find(v => v.name === r.value);
+      });
+    });
   });
 }
 
-// Speak the text with selected voice
-function speakText() {
-  const text = document.getElementById("textInput").value.trim();
-  if (!text) return;
+langSelect.addEventListener("change", refreshVoiceUI);
+speechSynthesis.addEventListener("voiceschanged", refreshVoiceUI);
 
-  const lang = document.getElementById("langSelect").value;
-  const radios = document.querySelectorAll('input[name="voice"]');
-  const selectedRadio = Array.from(radios).find(r => r.checked);
-  if (!selectedRadio) return;
-
-  let filtered;
-  if (lang === "de") {
-    filtered = allVoices.filter(v => v.lang.toLowerCase().startsWith("de"));
-  } else if (lang === "en") {
-    filtered = allVoices.filter(v => v.lang.toLowerCase().startsWith("en"));
-  } else {
-    filtered = allVoices.filter(v => v.lang.toLowerCase() === lang.toLowerCase());
-  }
-
-  const voice = filtered[selectedRadio.value];
-
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.voice = voice;
-  utterance.lang = voice.lang;
-
-  speechSynthesis.cancel(); // stop any current speech
-  speechSynthesis.speak(utterance);
-}
-
-// Event listeners
-document.getElementById("langSelect").addEventListener("change", () => {
-  populateVoices(document.getElementById("langSelect").value);
+document.getElementById("speakBtn").addEventListener("click", () => {
+  const text = document.getElementById("text").value;
+  const u = new SpeechSynthesisUtterance(text);
+  if (selectedVoice) u.voice = selectedVoice;
+  speechSynthesis.speak(u);
 });
 
-document.getElementById("speakBtn").addEventListener("click", speakText);
-
-window.addEventListener('load', () => {
-  loadVoices(() => {
-    populateVoices(document.getElementById("langSelect").value);
-  });
-});
-speechSynthesis.addEventListener('voiceschanged', () => {
-  loadVoices(() => {
-    populateVoices(document.getElementById("langSelect").value);
-  });
-});
+refreshVoiceUI();
 </script>
+
 </body>
 </html>
