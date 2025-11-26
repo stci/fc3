@@ -304,6 +304,15 @@ function loadIncludedBuiltinLessons() {
 function storeIncludedBuiltinLessons(data) {
   localStorage.setItem("builtin-lessons", JSON.stringify(data));
 }
+
+function loadSelectedTrainingLessons() {
+  const data = JSON.parse(localStorage.getItem("training-lessons")) || [];
+  return data;
+}
+
+function storeSelectedTrainingLessons(data) {
+  localStorage.setItem("training-lessons", JSON.stringify(data));
+}
 // -----------------------------------------------------------------------------
 
 function setCardColor(rating) {
@@ -329,7 +338,7 @@ function showCard() {
   const note = document.getElementById("note");
 
   if (!cards.length) {
-	selectLessons();
+	showLessons();
     return;
   }
   
@@ -674,6 +683,8 @@ function selectLessonsWindow() {
 
 function startTraining() {
   const selected = Array.from(document.querySelectorAll('#lessons-check-list input[type=checkbox]:checked')).map(ch => ch.value);
+  storeSelectedTrainingLessons(selected);
+
   const filteredCards = storedCards.filter(item => selected.includes(item.section));
  
   cards = [...filteredCards].sort(
@@ -744,11 +755,17 @@ function showLessons() {
   Bsections.forEach(section => {
 	var cnt = storedCards.filter(item => item && item.section === section).length;
     const lix = document.createElement("li");
-	lix.innerHTML = `<input type="checkbox" name="${section}" value="${section}" checked><label for="${section}">${section} <span style="font-style: italic; color: #D3D3D3;">(${cnt})</span></label>`;
+	lix.innerHTML = `<input type="checkbox" name="${section}" value="${section}"><label for="${section}">${section} <span style="font-style: italic; color: #D3D3D3;">(${cnt})</span></label>`;
     list.appendChild(lix);
   });
   };
   
+  const trainingLessons = loadSelectedTrainingLessons();
+  document.querySelectorAll("#lessons-check-list input[type=checkbox]")
+    .forEach(ch => {
+    ch.checked = trainingLessons.includes(ch.value);
+  });
+
   showWindow("window-sections");
 }
 
