@@ -2,16 +2,36 @@
 <html>
 <head>
 <meta charset="UTF-8" />
-<title>Speech Synthesis Demo (Smart Voice Selection)</title>
+<title>Speech Synthesis Demo (Smart Voice Selection + Logging)</title>
 <style>
 body { font-family: Arial, sans-serif; margin: 20px; }
 #voices { margin-top: 10px; }
 .auto-selected { padding: 5px; font-weight: bold; color: green; }
+#logBox {
+  background: #f0f0f0;
+  padding: 10px;
+  border-radius: 6px;
+  height: 200px;
+  overflow-y: auto;
+  font-family: monospace;
+  margin-top: 10px;
+  white-space: pre-wrap;
+}
+#uaBox {
+  background: #eef6ff;
+  padding: 10px;
+  border-radius: 6px;
+  font-family: monospace;
+  margin-bottom: 20px;
+}
 </style>
 </head>
 <body>
 
 <h2>Speech Synthesis Demo</h2>
+
+<h3>User Agent Info</h3>
+<div id="uaBox"></div>
 
 <label>Language:</label>
 <select id="lang">
@@ -31,147 +51,192 @@ body { font-family: Arial, sans-serif; margin: 20px; }
 <label>Available voices:</label>
 <div id="voices"></div>
 
+<h3>Selection Log</h3>
+<div id="logBox"></div>
+
 <br>
 <button id="speakBtn">Speak</button>
 
 <script>
-/* ================================================================
+/* ============================================
+   UTIL: Log to page
+   ============================================ */
+function log(msg) {
+  const logBox = document.getElementById("logBox");
+  logBox.textContent += msg + "\n";
+  logBox.scrollTop = logBox.scrollHeight;
+}
+
+/* ============================================
+   SHOW USER AGENT DETAILS
+   ============================================ */
+const uaBox = document.getElementById("uaBox");
+uaBox.textContent =
+  "userAgent: " + navigator.userAgent + "\n" +
+  "platform: " + navigator.platform + "\n" +
+  "language: " + navigator.language + "\n" +
+  "vendor: " + navigator.vendor;
+
+/* ============================================
    SMART CROSS-PLATFORM BEST VOICE SELECTOR
-   ================================================================ */
+   ============================================ */
 function getBestVoice(lang, callback) {
   const ua = navigator.userAgent;
   const isIOS = /iPad|iPhone|iPod/.test(ua);
 
-  const iOSBestVoice = {
-    "en-gb": "daniel"
-  };
+  log("=== Starting voice selection for: " + lang + " ===");
+  log("Detected iOS: " + isIOS);
 
   function loadVoices() {
     let voices = speechSynthesis.getVoices();
+    log("Voices loaded: " + voices.length);
 
     if (isIOS && !voices.length) {
+      log("iOS: Voices empty → retry loop started…");
       let attempts = 0;
+
       const interval = setInterval(() => {
         voices = speechSynthesis.getVoices();
         attempts++;
-        if (voices.length || attempts > 20) {
+
+        if (voices.length) {
+          clearInterval(interval);
+          log("iOS: Voices loaded after attempts: " + attempts);
+          selectVoice(voices);
+        } else if (attempts > 20) {
+          log("iOS: Giving up after 20 attempts.");
           clearInterval(interval);
           selectVoice(voices);
         }
       }, 100);
+
     } else {
       selectVoice(voices);
     }
   }
 
   function selectVoice(voices) {
-    if (!voices.length) return callback(null);
+    if (!voices.length) {
+      log("No voices available.");
+      return callback(null);
+    }
 
     const langPrefix = lang.toLowerCase();
 
-    function isBadMultilingual(v) {
+    const isBadMultilingual = v => {
       const n = v.name.toLowerCase();
       return n.includes("multilingual") || n.includes("universal");
-    }
+    };
 
-    /* =======================================================
-       iOS SPECIAL LOGIC (BEST VOICES FOR iPad/iPhone)
-       ======================================================= */
+    /* ============================
+       iOS SPECIAL CASES
+       ============================ */
     if (isIOS) {
-      /* ---- GERMAN ---- */
+      /* ---- German ---- */
       if (langPrefix === "de-de") {
-        const iOSGermanPriority = ["anna", "markus", "petra", "klara"];
+        log("iOS German: Searching Anna → Markus → Petra → Klara…");
+        const priority = ["anna", "markus", "petra", "klara"];
 
-        // 1) Exact locale first
-        for (const name of iOSGermanPriority) {
+        for (const key of priority) {
           const v = voices.find(x =>
             x.lang.toLowerCase() === "de-de" &&
-            x.name.toLowerCase().includes(name)
+            x.name.toLowerCase().includes(key)
           );
-          if (v) return callback(v);
+          if (v) {
+            log("Found: " + v.name);
+            return callback(v);
+          }
         }
 
-        // 2) Fallback ANY de-de (non-bad)
-        let v = voices.find(x =>
+        log("No priority voice found → fallback de-DE non-multilingual");
+        const v = voices.find(x =>
           x.lang.toLowerCase() === "de-de" && !isBadMultilingual(x)
         );
-        if (v) return callback(v);
-
-        // 3) Fallback de-AT / de-CH
-        v = voices.find(x => x.lang.toLowerCase() === "de-at");
-        if (v) return callback(v);
-        v = voices.find(x => x.lang.toLowerCase() === "de-ch");
-        if (v) return callback(v);
+        if (v) {
+          log("Using fallback DE: " + v.name);
+          return callback(v);
+        }
       }
 
-      /* ---- ENGLISH ---- */
+      /* ---- English ---- */
       if (langPrefix === "en-gb") {
-        const target = "daniel";
+        log("iOS English: Searching Daniel…");
         const v = voices.find(x =>
           x.lang.toLowerCase() === "en-gb" &&
-          x.name.toLowerCase().includes(target)
+          x.name.toLowerCase().includes("daniel")
         );
-        if (v) return callback(v);
+        if (v) {
+          log("Found Daniel.");
+          return callback(v);
+        }
       }
     }
 
-    /* =======================================================
-       MICROSOFT EDGE "ONLINE NATURAL" VOICES
-       ======================================================= */
+    /* ============================
+       Edge Online Natural voices
+       ============================ */
     if (/Edg\//.test(ua)) {
+      log("Microsoft Edge detected → looking for Online Natural voices…");
       const v = voices.find(x =>
         x.lang.toLowerCase() === langPrefix &&
         !isBadMultilingual(x) &&
         x.name.toLowerCase().includes("online") &&
         x.name.toLowerCase().includes("natural")
       );
-      if (v) return callback(v);
+      if (v) {
+        log("Using Online Natural: " + v.name);
+        return callback(v);
+      }
     }
 
-    /* =======================================================
-       ANDROID EXACT MATCH
-       ======================================================= */
-    const androidExact = voices.find(v =>
+    /* ============================
+       Android exact match
+       ============================ */
+    log("Checking Android / normal exact match for: " + langPrefix);
+    const exact = voices.find(v =>
       v.lang.toLowerCase() === langPrefix &&
       !isBadMultilingual(v)
     );
-    if (androidExact) return callback(androidExact);
+    if (exact) {
+      log("Exact match found: " + exact.name);
+      return callback(exact);
+    }
 
-    /* =======================================================
-       PREFERRED VOICES
-       ======================================================= */
+    /* ============================
+       Preferred fallback voices
+       ============================ */
     const preferred = {
       "de-de": ["katja", "conrad"],
       "en-gb": []
     }[langPrefix] || [];
 
-    let v = voices.find(x =>
-      x.lang.toLowerCase() === langPrefix &&
-      !isBadMultilingual(x) &&
-      preferred.some(p => x.name.toLowerCase().includes(p))
-    );
-    if (v) return callback(v);
+    if (preferred.length) {
+      log("Searching preferred voices: " + preferred.join(", "));
+      const v = voices.find(x =>
+        x.lang.toLowerCase() === langPrefix &&
+        !isBadMultilingual(x) &&
+        preferred.some(p => x.name.toLowerCase().includes(p))
+      );
+      if (v) {
+        log("Preferred found: " + v.name);
+        return callback(v);
+      }
+    }
 
-    /* =======================================================
-       NORMAL FALLBACKS
-       ======================================================= */
-    v = voices.find(x =>
+    /* ============================
+       Normal fallback
+       ============================ */
+    log("Normal fallback: any matching locale.");
+    const fallback = voices.find(x =>
       x.lang.toLowerCase() === langPrefix &&
       !isBadMultilingual(x)
     );
-    if (v) return callback(v);
-
-    if (langPrefix === "de-de") {
-      v = voices.find(x => x.lang.toLowerCase() === "de-at");
-      if (v) return callback(v);
-
-      v = voices.find(x => x.lang.toLowerCase() === "de-ch");
-      if (v) return callback(v);
+    if (fallback) {
+      log("Fallback voice: " + fallback.name);
+      return callback(fallback);
     }
 
-    v = voices.find(x => x.lang.toLowerCase().startsWith(langPrefix));
-    if (v) return callback(v);
-
+    log("No voice found → return null");
     callback(null);
   }
 
@@ -179,15 +244,18 @@ function getBestVoice(lang, callback) {
   else speechSynthesis.addEventListener("voiceschanged", loadVoices, { once: true });
 }
 
-/* ================================================================
-   DEMO UI LOGIC
-   ================================================================ */
+/* ============================================
+   DEMO UI
+   ============================================ */
 const langSelect = document.getElementById("lang");
 const voicesDiv = document.getElementById("voices");
 const autoDiv = document.getElementById("auto");
 let selectedVoice = null;
 
 function refreshVoiceUI() {
+  document.getElementById("logBox").textContent = ""; // clear log
+  log("Refreshing UI…");
+
   const lang = langSelect.value;
   const langLower = lang.toLowerCase();
 
@@ -199,28 +267,20 @@ function refreshVoiceUI() {
       : "No auto-selected voice found";
 
     const voices = speechSynthesis.getVoices();
+    voicesDiv.innerHTML = "";
 
-    // FIRST: EXACT locale
-    const exact = voices.filter(v =>
-      v.lang.toLowerCase() === langLower
-    );
-
-    // SECOND: RELATED languages (starts with "en" or "de")
+    const exact = voices.filter(v => v.lang.toLowerCase() === langLower);
     const related = voices.filter(v =>
-      v.lang.toLowerCase().startsWith(langLower.substring(0,2)) &&
+      v.lang.toLowerCase().startsWith(langLower.substring(0, 2)) &&
       v.lang.toLowerCase() !== langLower
     );
 
     const filtered = [...exact, ...related];
 
-    voicesDiv.innerHTML = "";
-
     filtered.forEach(v => {
-      const id = "v_" + Math.random();
       const checked =
         selectedVoice &&
-        selectedVoice.name === v.name &&
-        selectedVoice.lang.toLowerCase() === langLower
+        selectedVoice.name === v.name
           ? "checked"
           : "";
 
@@ -236,6 +296,7 @@ function refreshVoiceUI() {
       r.addEventListener("change", () => {
         const voices = speechSynthesis.getVoices();
         selectedVoice = voices.find(v => v.name === r.value);
+        log("User selected voice manually: " + selectedVoice.name);
       });
     });
   });
@@ -247,7 +308,10 @@ speechSynthesis.addEventListener("voiceschanged", refreshVoiceUI);
 document.getElementById("speakBtn").addEventListener("click", () => {
   const text = document.getElementById("text").value;
   const u = new SpeechSynthesisUtterance(text);
-  if (selectedVoice) u.voice = selectedVoice;
+  if (selectedVoice) {
+    u.voice = selectedVoice;
+    log("Speaking with: " + selectedVoice.name);
+  }
   speechSynthesis.speak(u);
 });
 
