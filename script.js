@@ -8,17 +8,11 @@ let index = 0;
 
 function getBestVoice(lang, callback) {
   const ua = navigator.userAgent;
-  const isIOS = /iPad|iPhone|iPod/.test(ua);
-
-  // iOS English best voice
-  const iOSBestVoice = {
-    "en-gb": "daniel"
-  };
+  const isIOS = (/iPad|iPhone|iPod/.test(ua)) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const isAndroid = /Android/i.test(ua);
 
   function loadVoices() {
     let voices = speechSynthesis.getVoices();
-
-    // iOS sometimes loads voices slowly
     if (isIOS && !voices.length) {
       let attempts = 0;
       const interval = setInterval(() => {
@@ -38,114 +32,66 @@ function getBestVoice(lang, callback) {
     if (!voices.length) return callback(null);
 
     const langPrefix = lang.toLowerCase();
+    const isBadMultilingual = v => isAndroid ? false : /multilingual|universal/i.test(v.name);
 
-    // Avoid bad multilingual voices
-    function isBadMultilingual(v) {
-      const n = v.name.toLowerCase();
-      return n.includes("multilingual") || n.includes("universal");
-    }
-
-    // 🟦 1) iOS logic (best voices)
+    // iOS special voices
     if (isIOS) {
-
-      // ---- iOS GERMAN ----
-      if (langPrefix.startsWith("de")) {
-        const iOSGermanPriority = ["anna", "markus", "petra", "klara"];
-
-        // Try preferred voices first
-        for (const name of iOSGermanPriority) {
-          const v = voices.find(x =>
-            x.name.toLowerCase().includes(name) &&
-            x.lang.toLowerCase().startsWith("de")
-          );
+      if (langPrefix === "de-de") {
+        const priority = ["anna", "markus", "petra", "klara"];
+        for (const key of priority) {
+          const v = voices.find(x => x.lang.toLowerCase() === "de-de" && x.name.toLowerCase().includes(key));
           if (v) return callback(v);
         }
-
-        // Try any non-multilingual native DE voice
-        let v = voices.find(x =>
-          x.lang.toLowerCase().startsWith("de") &&
-          !isBadMultilingual(x)
-        );
-        if (v) return callback(v);
-
-        // Try de-AT / de-CH
-        v = voices.find(x => x.lang.toLowerCase() === "de-at");
-        if (v) return callback(v);
-        v = voices.find(x => x.lang.toLowerCase() === "de-ch");
-        if (v) return callback(v);
+        const fallback = voices.find(x => x.lang.toLowerCase() === "de-de" && !isBadMultilingual(x));
+        if (fallback) return callback(fallback);
       }
-
-      // ---- iOS ENGLISH ----
-      if (iOSBestVoice[langPrefix]) {
-        const target = iOSBestVoice[langPrefix];
-        const v = voices.find(x =>
-          x.name.toLowerCase().includes(target) &&
-          x.lang.toLowerCase().startsWith("en")
-        );
+      if (langPrefix === "en-gb") {
+        const v = voices.find(x => x.lang.toLowerCase() === "en-gb" && x.name.toLowerCase().includes("daniel"));
         if (v) return callback(v);
       }
     }
 
-    // 🟩 2) Microsoft Edge "Online Natural" voices
+    // Edge Online Natural
     if (/Edg\//.test(ua)) {
       const v = voices.find(x =>
         x.lang.toLowerCase() === langPrefix &&
         !isBadMultilingual(x) &&
-        x.name.toLowerCase().includes("online") &&
-        x.name.toLowerCase().includes("natural")
+        /online/i.test(x.name) &&
+        /natural/i.test(x.name)
       );
       if (v) return callback(v);
     }
 
-    // 🟧 3) Android prefers exact locale
-    const androidExact = voices.find(v =>
-      v.lang.toLowerCase() === langPrefix &&
-      !isBadMultilingual(v)
-    );
-    if (androidExact) return callback(androidExact);
+    // Exact match with normalization
+    let exact = voices.find(v => v.lang.toLowerCase().replace('_','-') === langPrefix && !isBadMultilingual(v));
+    if (!exact && isAndroid) {
+      exact = voices.find(v => v.lang.toLowerCase().replace('_','-').startsWith(langPrefix.substring(0,2)) && !isBadMultilingual(v));
+    }
+    if (exact) return callback(exact);
 
-    // 🟨 4) Secondary preferences (original logic)
+    // Preferred voices
     const preferred = {
-      "de-de": ["katja", "conrad"],   // MS Edge natural German voices
-      "en-gb": []                     // (Add if needed)
+      "de-de": ["katja", "conrad"],
+      "en-gb": []
     }[langPrefix] || [];
-
-    let v = voices.find(x =>
-      x.lang.toLowerCase() === langPrefix &&
-      !isBadMultilingual(x) &&
-      preferred.some(p => x.name.toLowerCase().includes(p))
-    );
-    if (v) return callback(v);
-
-    // 🟩 5) Any non-multilingual match
-    v = voices.find(x =>
-      x.lang.toLowerCase() === langPrefix &&
-      !isBadMultilingual(x)
-    );
-    if (v) return callback(v);
-
-    // 🟪 6) German fallback: de-AT / de-CH
-    if (langPrefix === "de-de") {
-      v = voices.find(x => x.lang.toLowerCase() === "de-at");
-      if (v) return callback(v);
-      v = voices.find(x => x.lang.toLowerCase() === "de-ch");
-      if (v) return callback(v);
+    if (preferred.length) {
+      const p = voices.find(x =>
+        x.lang.toLowerCase() === langPrefix &&
+        !isBadMultilingual(x) &&
+        preferred.some(pn => x.name.toLowerCase().includes(pn))
+      );
+      if (p) return callback(p);
     }
 
-    // 🟫 7) Any voice starting with the prefix
-    v = voices.find(x => x.lang.toLowerCase().startsWith(langPrefix));
-    if (v) return callback(v);
+    // Fallback
+    const fallback = voices.find(x => x.lang.toLowerCase() === langPrefix && !isBadMultilingual(x));
+    if (fallback) return callback(fallback);
 
-    // ❌ Nothing found
     callback(null);
   }
 
-  // Start loading
-  if (speechSynthesis.getVoices().length > 0) {
-    loadVoices();
-  } else {
-    speechSynthesis.addEventListener("voiceschanged", loadVoices, { once: true });
-  }
+  if (speechSynthesis.getVoices().length > 0) loadVoices();
+  else speechSynthesis.addEventListener("voiceschanged", loadVoices, { once: true });
 }
 
 const speak = (function () {
