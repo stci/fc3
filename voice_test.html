@@ -5,6 +5,7 @@
 <title>Speech Synthesis Demo (Smart Voice Selection + Logging)</title>
 <style>
 body { font-family: Arial, sans-serif; margin: 20px; }
+#version { font-weight: bold; margin-bottom: 10px; }
 #voices { margin-top: 10px; }
 .auto-selected { padding: 5px; font-weight: bold; color: green; }
 #logBox {
@@ -28,6 +29,8 @@ body { font-family: Arial, sans-serif; margin: 20px; }
 </head>
 <body>
 
+<div id="version">Version: 1.2 (Smart Voice Selection + Android Fixes)</div>
+
 <h2>Speech Synthesis Demo</h2>
 
 <h3>User Agent Info</h3>
@@ -42,7 +45,7 @@ body { font-family: Arial, sans-serif; margin: 20px; }
 <br><br>
 
 <label>Text to speak:</label><br>
-<textarea id="text" rows="4" cols="60">Hello! This is a test.</textarea>
+<textarea id="text" rows="4" cols="60">Hello, how are you?</textarea>
 
 <br><br>
 
@@ -183,14 +186,24 @@ function getBestVoice(lang, callback) {
       }
     }
 
-    /* Exact match (works for Android) */
+    /* Exact match (with _ → - normalization for Android) */
     log("Exact match search for: " + langPrefix);
-    const exact = voices.find(v =>
-      v.lang.toLowerCase() === langPrefix &&
-      !isBadMultilingual(v)
-    );
+    let exact = voices.find(v => {
+      const vLang = v.lang.toLowerCase().replace('_','-');
+      return vLang === langPrefix && !isBadMultilingual(v);
+    });
+
+    // Fuzzy fallback for Android if exact fails
+    if (!exact && isAndroid) {
+      exact = voices.find(v =>
+        v.lang.toLowerCase().replace('_','-').startsWith(langPrefix.substring(0,2)) &&
+        !isBadMultilingual(v)
+      );
+      if (exact) log("Using fuzzy match for Android: " + exact.name);
+    }
+
     if (exact) {
-      log("Exact match found: " + exact.name);
+      log("Selected voice: " + exact.name);
       return callback(exact);
     }
 
@@ -232,11 +245,16 @@ function getBestVoice(lang, callback) {
 const langSelect = document.getElementById("lang");
 const voicesDiv = document.getElementById("voices");
 const autoDiv = document.getElementById("auto");
+const textArea = document.getElementById("text");
 let selectedVoice = null;
 
 function refreshVoiceUI() {
   document.getElementById("logBox").textContent = "";
   log("Refreshing UI…");
+
+  // Update textarea default text
+  if (langSelect.value === "en-GB") textArea.value = "Hello, how are you?";
+  if (langSelect.value === "de-DE") textArea.value = "Tschuss. Guten Morgen.";
 
   const lang = langSelect.value;
   const langLower = lang.toLowerCase();
@@ -251,10 +269,10 @@ function refreshVoiceUI() {
     const voices = speechSynthesis.getVoices();
     voicesDiv.innerHTML = "";
 
-    const exact = voices.filter(v => v.lang.toLowerCase() === langLower);
+    const exact = voices.filter(v => v.lang.toLowerCase().replace('_','-') === langLower);
     const related = voices.filter(v =>
-      v.lang.toLowerCase().startsWith(langLower.substring(0, 2)) &&
-      v.lang.toLowerCase() !== langLower
+      v.lang.toLowerCase().replace('_','-').startsWith(langLower.substring(0,2)) &&
+      v.lang.toLowerCase().replace('_','-') !== langLower
     );
 
     const filtered = [...exact, ...related];
@@ -293,16 +311,15 @@ document.getElementById("speakBtn").addEventListener("click", () => {
     return;
   }
 
-  // ⚡ Android fix: force lang, voiceURI, localService
-  const text = document.getElementById("text").value;
+  const text = textArea.value;
   const u = new SpeechSynthesisUtterance(text);
 
+  // Android fixes
   u.voice = selectedVoice;
   u.lang = selectedVoice.lang;
   u.localService = false;
   u.voiceURI = selectedVoice.voiceURI;
 
-  // Reset engine to avoid Android caching previous language
   if (/Android/i.test(navigator.userAgent)) {
     speechSynthesis.cancel();
     log("speechSynthesis.cancel() called to reset engine on Android");
