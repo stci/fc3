@@ -7,27 +7,24 @@ let cards = [];
 let index = 0;
 
 function getBestVoice(lang, callback) {
-  const iOSBestVoice = {
-    "de-de": "Anna",       // iPad preferred German
-    "en-gb": "Daniel"      // iPad English GB
-  };
+  const ua = navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(ua);
 
-  const preferred = {
-    "de-de": ["katja", "conrad"], // MS Edge / other preferred DE voices
-    "en-gb": ["daniel", "zira", "george"],
-    "en-us": ["samantha", "jenny", "david"]
+  // iOS English best voice
+  const iOSBestVoice = {
+    "en-gb": "daniel"
   };
 
   function loadVoices() {
     let voices = speechSynthesis.getVoices();
 
-    // iOS may need polling
-    if (!voices.length && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
+    // iOS sometimes loads voices slowly
+    if (isIOS && !voices.length) {
       let attempts = 0;
       const interval = setInterval(() => {
         voices = speechSynthesis.getVoices();
         attempts++;
-        if (voices.length || attempts > 20) { // ~2 seconds max
+        if (voices.length || attempts > 20) {
           clearInterval(interval);
           selectVoice(voices);
         }
@@ -42,68 +39,108 @@ function getBestVoice(lang, callback) {
 
     const langPrefix = lang.toLowerCase();
 
+    // Avoid bad multilingual voices
     function isBadMultilingual(v) {
       const n = v.name.toLowerCase();
       return n.includes("multilingual") || n.includes("universal");
     }
 
-    // --- iPad preferred voices ---
-    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-      const bestName = iOSBestVoice[langPrefix];
-      if (bestName) {
-        let voice = voices.find(v => v.name.toLowerCase().includes(bestName.toLowerCase()));
-        if (voice) return callback(voice);
+    // 🟦 1) iOS logic (best voices)
+    if (isIOS) {
+
+      // ---- iOS GERMAN ----
+      if (langPrefix.startsWith("de")) {
+        const iOSGermanPriority = ["anna", "markus", "petra", "klara"];
+
+        // Try preferred voices first
+        for (const name of iOSGermanPriority) {
+          const v = voices.find(x =>
+            x.name.toLowerCase().includes(name) &&
+            x.lang.toLowerCase().startsWith("de")
+          );
+          if (v) return callback(v);
+        }
+
+        // Try any non-multilingual native DE voice
+        let v = voices.find(x =>
+          x.lang.toLowerCase().startsWith("de") &&
+          !isBadMultilingual(x)
+        );
+        if (v) return callback(v);
+
+        // Try de-AT / de-CH
+        v = voices.find(x => x.lang.toLowerCase() === "de-at");
+        if (v) return callback(v);
+        v = voices.find(x => x.lang.toLowerCase() === "de-ch");
+        if (v) return callback(v);
+      }
+
+      // ---- iOS ENGLISH ----
+      if (iOSBestVoice[langPrefix]) {
+        const target = iOSBestVoice[langPrefix];
+        const v = voices.find(x =>
+          x.name.toLowerCase().includes(target) &&
+          x.lang.toLowerCase().startsWith("en")
+        );
+        if (v) return callback(v);
       }
     }
 
-    // --- MS Edge preferred voices ---
-    if (/Edg/.test(navigator.userAgent)) {
-      let voice = voices.find(v =>
-        v.name.toLowerCase().includes("online") &&
-        v.name.toLowerCase().includes("natural") &&
-        !isBadMultilingual(v) &&
-        v.lang.toLowerCase().startsWith(langPrefix)
+    // 🟩 2) Microsoft Edge "Online Natural" voices
+    if (/Edg\//.test(ua)) {
+      const v = voices.find(x =>
+        x.lang.toLowerCase() === langPrefix &&
+        !isBadMultilingual(x) &&
+        x.name.toLowerCase().includes("online") &&
+        x.name.toLowerCase().includes("natural")
       );
-      if (voice) return callback(voice);
+      if (v) return callback(v);
     }
 
-    // --- Preferred voices by name ---
-    let voice = voices.find(v =>
-      v.lang.toLowerCase().startsWith(langPrefix) &&
-      !isBadMultilingual(v) &&
-      preferred[langPrefix] &&
-      preferred[langPrefix].some(p => v.name.toLowerCase().includes(p))
-    );
-    if (voice) return callback(voice);
-
-    // --- Other native voices (not multilingual) ---
-    voice = voices.find(v =>
-      v.lang.toLowerCase().startsWith(langPrefix) &&
+    // 🟧 3) Android prefers exact locale
+    const androidExact = voices.find(v =>
+      v.lang.toLowerCase() === langPrefix &&
       !isBadMultilingual(v)
     );
-    if (voice) return callback(voice);
+    if (androidExact) return callback(androidExact);
 
-    // --- German fallbacks ---
+    // 🟨 4) Secondary preferences (original logic)
+    const preferred = {
+      "de-de": ["katja", "conrad"],   // MS Edge natural German voices
+      "en-gb": []                     // (Add if needed)
+    }[langPrefix] || [];
+
+    let v = voices.find(x =>
+      x.lang.toLowerCase() === langPrefix &&
+      !isBadMultilingual(x) &&
+      preferred.some(p => x.name.toLowerCase().includes(p))
+    );
+    if (v) return callback(v);
+
+    // 🟩 5) Any non-multilingual match
+    v = voices.find(x =>
+      x.lang.toLowerCase() === langPrefix &&
+      !isBadMultilingual(x)
+    );
+    if (v) return callback(v);
+
+    // 🟪 6) German fallback: de-AT / de-CH
     if (langPrefix === "de-de") {
-      ["de-at", "de-ch"].some(fbLang => {
-        voice = voices.find(v =>
-          v.lang.toLowerCase() === fbLang && !isBadMultilingual(v)
-        );
-        return !!voice;
-      });
-      if (voice) return callback(voice);
+      v = voices.find(x => x.lang.toLowerCase() === "de-at");
+      if (v) return callback(v);
+      v = voices.find(x => x.lang.toLowerCase() === "de-ch");
+      if (v) return callback(v);
     }
 
-    // --- Last fallback: any matching language prefix ---
-    voice = voices.find(v =>
-      v.lang.toLowerCase().startsWith(langPrefix)
-    );
-    if (voice) return callback(voice);
+    // 🟫 7) Any voice starting with the prefix
+    v = voices.find(x => x.lang.toLowerCase().startsWith(langPrefix));
+    if (v) return callback(v);
 
-    // --- Nothing found ---
+    // ❌ Nothing found
     callback(null);
   }
 
+  // Start loading
   if (speechSynthesis.getVoices().length > 0) {
     loadVoices();
   } else {
