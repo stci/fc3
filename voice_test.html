@@ -83,7 +83,6 @@ uaBox.textContent =
 function getBestVoice(lang, callback) {
   const ua = navigator.userAgent;
 
-  // True iOS detection
   const isIOS =
     (/iPad|iPhone|iPod/.test(ua)) ||
     (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
@@ -130,21 +129,14 @@ function getBestVoice(lang, callback) {
 
     const langPrefix = lang.toLowerCase();
 
-    /* ===================================================
-       FIX: Android multilingual voices are VALID
-       =================================================== */
     function isBadMultilingual(v) {
       const n = v.name.toLowerCase();
-
-      // ✔ DO NOT FILTER multilingual on Android
+      // Android multilingual voices are valid
       if (isAndroid) return false;
-
       return n.includes("multilingual") || n.includes("universal");
     }
 
-    /* ============================
-       iOS SPECIAL CASES
-       ============================ */
+    /* iOS special handling */
     if (isIOS) {
       if (langPrefix === "de-de") {
         log("iOS German: Searching Anna → Markus → Petra → Klara…");
@@ -176,9 +168,7 @@ function getBestVoice(lang, callback) {
       }
     }
 
-    /* ============================
-       Edge Online Natural
-       ============================ */
+    /* Edge Online Natural */
     if (/Edg\//.test(ua)) {
       log("Edge detected → Online Natural search…");
       const v = voices.find(x =>
@@ -193,9 +183,7 @@ function getBestVoice(lang, callback) {
       }
     }
 
-    /* ============================
-       Exact match (now working on Android!)
-       ============================ */
+    /* Exact match (works for Android) */
     log("Exact match search for: " + langPrefix);
     const exact = voices.find(v =>
       v.lang.toLowerCase() === langPrefix &&
@@ -206,9 +194,7 @@ function getBestVoice(lang, callback) {
       return callback(exact);
     }
 
-    /* ============================
-       Preferred fallback
-       ============================ */
+    /* Preferred fallback */
     const preferred = {
       "de-de": ["katja", "conrad"],
       "en-gb": []
@@ -224,9 +210,7 @@ function getBestVoice(lang, callback) {
       if (p) return callback(p);
     }
 
-    /* ============================
-       Normal fallback
-       ============================ */
+    /* Normal fallback */
     log("Normal fallback: any matching locale.");
     const fallback = voices.find(x =>
       x.lang.toLowerCase() === langPrefix &&
@@ -304,12 +288,27 @@ langSelect.addEventListener("change", refreshVoiceUI);
 speechSynthesis.addEventListener("voiceschanged", refreshVoiceUI);
 
 document.getElementById("speakBtn").addEventListener("click", () => {
+  if (!selectedVoice) {
+    log("No voice selected → cannot speak");
+    return;
+  }
+
+  // ⚡ Android fix: force lang, voiceURI, localService
   const text = document.getElementById("text").value;
   const u = new SpeechSynthesisUtterance(text);
-  if (selectedVoice) {
-    u.voice = selectedVoice;
-    log("Speaking with: " + selectedVoice.name);
+
+  u.voice = selectedVoice;
+  u.lang = selectedVoice.lang;
+  u.localService = false;
+  u.voiceURI = selectedVoice.voiceURI;
+
+  // Reset engine to avoid Android caching previous language
+  if (/Android/i.test(navigator.userAgent)) {
+    speechSynthesis.cancel();
+    log("speechSynthesis.cancel() called to reset engine on Android");
   }
+
+  log("Speaking with: " + selectedVoice.name + " / lang=" + selectedVoice.lang);
   speechSynthesis.speak(u);
 });
 
