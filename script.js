@@ -222,7 +222,7 @@ ahoj = hello
 dobré ráno = good *morning*
 dobrý večer = good *evening*
 dobrý deň [doobeda] = good morning
-dobrý deň [poobede] = good evening [from noon]
+dobré popoludnie [zvyčajne od 12:00 maximálne do 18:00] = good afternnon [from noon till 5pm-6pm]
 
 === Rodina
 rodina = family
