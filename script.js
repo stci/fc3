@@ -217,7 +217,7 @@ function convertRawDataFormat(rawText) {
 
 // load data from storage
 function loadUserRaw() {
-  const rawdata = convertRawDataFormat(localStorage.getItem("rawdata") || `=== Pozdravy
+  const rawdata = localStorage.getItem("rawdata") || `=== Pozdravy
 ahoj = hello
 dobré ráno = good *morning*
 dobrý večer = good *evening*
@@ -227,7 +227,7 @@ dobré popoludnie [zvyčajne od 12:00 maximálne do 18:00] = good afternnon [fro
 === Rodina
 rodina = family
 mama = mother
-otec = father`);
+otec = father`;
 
   const rawdataV2 = convertRawDataFormat(rawdata);
   if (rawdataV2 !== rawdata) {
