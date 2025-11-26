@@ -679,6 +679,7 @@ function showLessons() {
   
   document.getElementById("btn-manage-db").classList.remove("hidden");
   document.getElementById("btn-select-lessons").classList.add("hidden");
+  document.getElementById("btn-manage-builtin-db").classList.add("hidden");
 
   
   const list = document.getElementById("lessons-check-list");
