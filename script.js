@@ -144,11 +144,11 @@ function hideAnswer() {
 }
 
 function showRateButtons() {
-  document.getElementById("rate").classList.toggle("hidden", false);
+  document.getElementById("btns-rating").classList.toggle("hidden", false);
 }
 
 function hideRateButtons() {
-  document.getElementById("rate").classList.toggle("hidden", true);
+  document.getElementById("btns-rating").classList.toggle("hidden", true);
 }
 
 function showRevealButton() {
@@ -754,7 +754,7 @@ function init() {
   document.getElementById("btn-play-audio").addEventListener("click", speak.bind(null, undefined, undefined));
   //document.getElementById("btn-help").addEventListener("click", showHelp);
 
-  document.querySelectorAll(".rating button").forEach(btn =>
+  document.querySelectorAll(".btns-rating button").forEach(btn =>
     btn.addEventListener("click", () => updateRating(parseInt(btn.dataset.rating)))
   );
 
