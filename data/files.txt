@@ -1,3 +1,3 @@
-../fc3/data/FAMILY_AND_FRIENDS_3.txt
-../fc3/data/WIR_ALLE_1.txt
+FAMILY_AND_FRIENDS_3.txt
+WIR_ALLE_1.txt
 

@@ -6,6 +6,17 @@ let builtInData = {};
 let cards = [];
 let index = 0;
 
+// Get base path for assets (works both locally and on GitHub Pages)
+function getBasePath() {
+  const path = window.location.pathname;
+  if (path.includes('/fc3/')) {
+    return '/fc3/';
+  }
+  return '/';
+}
+
+const basePath = getBasePath();
+
 function getBestVoice(lang, callback) {
   const ua = navigator.userAgent;
   const isIOS = (/iPad|iPhone|iPod/.test(ua)) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
@@ -527,7 +538,7 @@ function loadBuiltInLessonsFile(file) {
 
 function loadBuiltInLessons() {
   // Step 1: load files.txt
-  return fetch("../fc3/data/files.txt")
+  return fetch(`${basePath}data/files.txt`)
     .then(response => {
       if (!response.ok) throw new Error("Failed to load files.txt");
       return response.text();
@@ -537,7 +548,8 @@ function loadBuiltInLessons() {
       const files = text
         .split(/\r?\n/)
         .map(line => line.trim())
-        .filter(line => line.length > 0);
+        .filter(line => line.length > 0)
+        .map(file => `${basePath}data/${file}`); // Prepend basePath and data/ to each file
 
       // Step 2: load all listed files
       return Promise.all(files.map(f => loadBuiltInLessonsFile(f)));
@@ -565,20 +577,20 @@ function showWindow(id) {
 
 function manageDB() {
   showWindow("window-database");
-  document.getElementById("btn-manage-db").classList.add("hidden");
+  document.getElementById("btn-manage-userdb").classList.add("hidden");
   document.getElementById("btn-select-lessons").classList.remove("hidden");
-  document.getElementById("btn-manage-builtin-db").classList.remove("hidden");
+  document.getElementById("btn-manage-builtin").classList.remove("hidden");
 
   const selected = loadIncludedBuiltinLessons();
   if (selected.length > 0) {
-	document.getElementById("btn-manage-builtin-db").classList.remove("glowing");
+	document.getElementById("btn-manage-builtin").classList.remove("glowing");
 	document.getElementById("db-included-builtin-head").innerText = "Použité vstavané lekcie:";
 	document.getElementById("included-builtin-lessons").innerText =
       selected.map(item => `• ${item}`).join("\n");
   } else {
 	document.getElementById("db-included-builtin-head").innerText = "Nie sú použité žiadne vstavané lekcie.";
 	document.getElementById("included-builtin-lessons").innerText = "";
-	document.getElementById("btn-manage-builtin-db").classList.add("glowing");
+	document.getElementById("btn-manage-builtin").classList.add("glowing");
   };
 }
 
@@ -596,7 +608,7 @@ function manageBuiltInDB() {
   });
   
   showWindow("window-builtin");
-  document.getElementById("btn-manage-builtin-db").classList.add("hidden");
+  document.getElementById("btn-manage-builtin").classList.add("hidden");
 }
 
 function actualizeBuiltinDB() {
@@ -642,16 +654,16 @@ function startTraining() {
     (a, b) => (a.metadata.score - b.metadata.score) || (Math.random() - 0.5)
   );
   index = 0;
-  document.getElementById("btn-manage-db").classList.remove("hidden");
+  document.getElementById("btn-manage-userdb").classList.remove("hidden");
   document.getElementById("btn-select-lessons").classList.remove("hidden");
-  document.getElementById("btn-manage-builtin-db").classList.add("hidden");
+  document.getElementById("btn-manage-builtin").classList.add("hidden");
   showWindow("window-cards");
   showCard();
 }
 
 // 📘 Výber vstavaných lekcií
 function showBuiltInLessons(data, ulElement) {
-  if (data === null | data === {}) {
+  if (data === null | data == {}) {
 	  return;
   };
   
@@ -677,9 +689,9 @@ function showLessons() {
 	  return;
   };
   
-  document.getElementById("btn-manage-db").classList.remove("hidden");
+  document.getElementById("btn-manage-userdb").classList.remove("hidden");
   document.getElementById("btn-select-lessons").classList.add("hidden");
-  document.getElementById("btn-manage-builtin-db").classList.add("hidden");
+  document.getElementById("btn-manage-builtin").classList.add("hidden");
 
   
   const list = document.getElementById("lessons-check-list");
@@ -742,11 +754,11 @@ function init() {
   document.getElementById("rawData").value = loadUserRaw();
 
   // Pridanie listenerov
-  document.getElementById("btn-manage-db").addEventListener("click", manageDB);
-  document.getElementById("btn-manage-builtin-db").addEventListener("click", manageBuiltInDB);
-  document.getElementById("btn-use-builtin").addEventListener("click", includeBuiltInData);
+  document.getElementById("btn-manage-userdb").addEventListener("click", manageDB);
+  document.getElementById("btn-manage-builtin").addEventListener("click", manageBuiltInDB);
+  document.getElementById("btn-include-builtin").addEventListener("click", includeBuiltInData);
   document.getElementById("btn-select-lessons").addEventListener("click", showLessons);
-  document.getElementById("btn-load-db").addEventListener("click", loadUserData);
+  document.getElementById("btn-load-userdb").addEventListener("click", loadUserData);
   document.getElementById("btn-select-all").addEventListener("click", selectAllLessons);
   document.getElementById("btn-select-none").addEventListener("click", selectNoneLesson);
   document.getElementById("btn-start-training").addEventListener("click", startTraining);

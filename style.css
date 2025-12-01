@@ -51,6 +51,27 @@ h1 {
   /*min-height: calc(100vh - 150px); /* dynamická výška */
 }
 
+.btn {
+  background: var(--blue);
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s;
+  width: 500px;
+}
+
+.btn:hover {
+  background: var(--blue-dark);
+}
+
+#btn-manage-builtin {
+  background: Orange;
+  transition: background 0.2s;
+}
+
 .card {
   background: white;
   display: inline-block;
@@ -151,7 +172,7 @@ textarea {
   100% { background-color: transparent; }
 }
 
-#btn-manage-builtin-db.glowing {
+#btn-manage-builtin.glowing {
   animation: glowingOrange 2s infinite ease-in-out;
 }
 
@@ -217,7 +238,7 @@ textarea {
   gap: 10px; /* spacing between buttons */
 }
 
-.btn,
+
 .rating button {
   background: var(--blue);
   color: white;
@@ -230,15 +251,10 @@ textarea {
   width: 500px;
 }
 
-.btn:hover,
 .rating button:hover {
   background: var(--blue-dark);
 }
 
-#btn-manage-builtin-db {
-  background: Orange;
-  transition: background 0.2s;
-}
 
 .btn-help {
   /*background: grey;*/
@@ -266,15 +282,15 @@ textarea {
 	margin: 0.5rem auto;
 }
 
-#btn-load-db,
-#btn-use-builtin,
+#btn-load-userdb,
+#btn-include-builtin,
 #btn-start-training,
 #btn-reveal {
   background-color: MediumSeaGreen;
 }
 
-#btn-load-db:hover,
-#btn-use-builtin:hover,
+#btn-load-userdb:hover,
+#btn-include-builtin:hover,
 #btn-start-training:hover,
 #btn-reveal:hover {
   background-color: SeaGreen;
