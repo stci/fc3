@@ -343,8 +343,9 @@ function updateBar() {
   });
   
   Object.entries(percentages).forEach(([key, value]) => {
-    const selector = `.rating-${key === 'null' ? 'null' : key}`;
-    const el = document.querySelector(selector);
+    const selector = `progress-rating-${key === 'null' ? 'null' : key}`;
+    //const el = document.querySelector(selector);
+    const el = document.getElementById(selector);
     if (el) el.style.width = value;
   });
 
@@ -568,7 +569,7 @@ function loadBuiltInLessons() {
 // 🧭 Prepínanie okien
 function showWindow(id) {
   // skryje všetky okná vrátane sekcie s kartičkami
-  document.querySelectorAll(".window, #window-cards").forEach(w => w.classList.add("hidden"));
+  document.querySelectorAll(".window, #window-training").forEach(w => w.classList.add("hidden"));
 
   // zobrazí požadované okno
   const win = document.getElementById(id);
@@ -584,12 +585,13 @@ function manageDB() {
   const selected = loadIncludedBuiltinLessons();
   if (selected.length > 0) {
 	document.getElementById("btn-manage-builtin").classList.remove("glowing");
-	document.getElementById("db-included-builtin-head").innerText = "Použité vstavané lekcie:";
+	//document.getElementById("db-included-builtin-head").innerText = "Použité vstavané lekcie:";
 	document.getElementById("included-builtin-lessons").innerText =
-      selected.map(item => `• ${item}`).join("\n");
+      "Použité vstavané lekcie:\n" +
+      selected.map(item => ` • ${item}`).join("\n");
   } else {
-	document.getElementById("db-included-builtin-head").innerText = "Nie sú použité žiadne vstavané lekcie.";
-	document.getElementById("included-builtin-lessons").innerText = "";
+	//document.getElementById("db-included-builtin-head").innerText = "Nie sú použité žiadne vstavané lekcie.";
+	document.getElementById("included-builtin-lessons").innerText = "Nie sú použité žiadne vstavané lekcie.";
 	document.getElementById("btn-manage-builtin").classList.add("glowing");
   };
 }
@@ -657,7 +659,7 @@ function startTraining() {
   document.getElementById("btn-manage-userdb").classList.remove("hidden");
   document.getElementById("btn-select-lessons").classList.remove("hidden");
   document.getElementById("btn-manage-builtin").classList.add("hidden");
-  showWindow("window-cards");
+  showWindow("window-training");
   showCard();
 }
 

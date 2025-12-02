@@ -11,7 +11,7 @@
     <header class="controls" id="management">
       <button id="btn-manage-userdb"  class="btn">Upraviť slovnú zásobu</button>
       <button id="btn-select-lessons" class="btn">Výber lekcií pre tréning</button>
-	    <button id="btn-manage-builtin" class="btn">Vstavané lekcie</button>
+      <button id="btn-manage-builtin" class="btn">Vstavané lekcie</button>
     </header>
 
     <!-- Databáza -->
@@ -19,25 +19,25 @@
       <h1>Slovná zásoba</h1>
       <textarea id="rawData"></textarea>
       <div id="db-included-builtin-list" class="note">
-	    <p id="db-included-builtin-head">Použité vstavané lekcie:</p>
+	      <!--<p id="db-included-builtin-head">Použité vstavané lekcie:</p>-->
         <p id="included-builtin-lessons"></p>
       </div>
       <div class="controls">
         <button id="btn-load-userdb" class="btn">Načítať</button>
       </div>
-	  <p id="database-log"></p>
+	    <p id="database-log"></p>
       <div id="window-help" class="hidden">
-	    <hr />
+	      <hr />
         <p id="help">
-		  <u>Podporované formáty:</u><br />
-		  <b>=== Nazov lekcie</b><br />
-		  <i> - riadok musí začínať "=== " (vrátane medzery)</i><br /><br />
-		  <b>slovenský výraz [poznámka 1] = anglický výraz [poznámka 2]</b><br />
-		  <i> - slovenský a anglický výraz je oddelený znakom "="</i><br />
+		      <u>Podporované formáty:</u><br />
+		      <b>=== Nazov lekcie</b><br />
+		      <i> - riadok musí začínať "=== " (vrátane medzery)</i><br /><br />
+		      <b>slovenský výraz [poznámka 1] = anglický výraz [poznámka 2]</b><br />
+		      <i> - slovenský a anglický výraz je oddelený znakom "="</i><br />
           <i> - v riadku môže byť len jeden znak "="</i><br />
           <i> - "poznámky" nie sú povinné</i><br />
           <i> - "poznámka" musí byť na konci výrazu</i><br />
-		</p>
+		    </p>
       </div>
     </section>
 	
@@ -66,30 +66,33 @@
     </section>
 
     <!-- Kartičky -->
-    <section id="window-cards" class="hidden">
-	<div class="rating-bar">
-      <div class="rating-100"></div>
-      <div class="rating-50"></div>
-      <div class="rating-0"></div>
-      <div class="rating-null"></div>
-    </div>
-    <div class="card">
+    <section id="window-training" class="hidden">
+	    <div class="progress-bar">
+        <div id="progress-rating-100"></div>
+        <div id="progress-rating-50"></div>
+        <div id="progress-rating-0"></div>
+        <div id="progress-rating-null"></div>
+      </div>
+      <div class="card">
         <p id="section">Sekcia</p>
         <hr id="card-hru" />
-        <div class="card-info"><button id="btn-play-audio" class="hidden blink">&#9658; (prehrať zvuk)</button><p id="card-number">#</p></div>
+        <div class="card-info">
+          <button id="btn-play-audio" class="hidden blink">&#9658; (prehrať zvuk)</button>
+          <p id="card-number">#</p>
+        </div>
         <p id="question"></p>
         <p id="answer">?</p>
-		<p id="note" class="note">&nbsp;</p>
+		    <p id="note" class="note">&nbsp;</p>
         <hr id="card-hrb" />
         <div class="controls">
           <button id="btn-reveal" class="btn">Ukázať správnu odpoveď</button>
           <div id="btns-rating" class="btns-rating hidden">
-		    <p id="rating-note">Ohodnoť sa</p>
+		        <p id="rating-note">Ohodnoť sa</p>
             <button id="btn-rating-0" data-rating="0" title="Vôbec som nevedel">&#128542;</button><!--128542 -->
             <button id="btn-rating-50" data-rating="50" title="Nepresne / zaváhal som">&#128528;</button>
             <button id="btn-rating-100" data-rating="100" title="Perfektne">&#128522;</button>
           </div>        
-		</div>
+		    </div>
       </div>
     </section>
  </main>

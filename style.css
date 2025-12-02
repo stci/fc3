@@ -38,7 +38,7 @@ h1 {
 }
 
 /* Karty zobrazujeme priamo na pozadí stránky, bez bieleho "okna" */
-#window-cards {
+#window-training {
   background: transparent;
   padding: 0;
   margin: 0;
@@ -117,29 +117,21 @@ textarea {
 }
 
 #db-included-builtin-list,
-#db-included-builtin-head,
+#db-included-builtin-headx,
 #builtin-lessons-note,
 #included-builtin-lessons {
   text-align: left;
   padding: 0;
-  /*padding-left: 1rem;*/
+  /*padding-left: 0.5rem;*/
   font-size: 0.8rem;
   color: grey;
   font-style: italic;
   margin: 0 auto;
-  margin-top: 0.5rem;
-  margin-bottom: 0;
+  margin-top: 0;
+  /*margin-left: 0.3rem;*/
+  /*margin-top: 0.5rem;
+  margin-bottom: 0;*/
   width: 100%;
-}
-
-#db-included-builtin-head {
-  padding-left: 0;
-  margin: 0;
-}
-
-#included-builtin-lessons {
-  padding-left: 1rem;
-  margin: 0;
 }
 
 #rating-note {
@@ -273,7 +265,7 @@ textarea {
   font-weight: bolder;
 }
 
-.rating-bar {
+.progress-bar {
     display: flex;
     height: 8px;
     width: 600px;
@@ -329,10 +321,10 @@ textarea {
   background-color: rgba(0,128,0,0.4);
 }
 
-.rating-100 { background-color: green; width: 0; }
-.rating-50 { background-color: orange; width: 0; }
-.rating-0 { background-color: red; width: 0; }
-.rating-null { background-color: grey; width: 100%; }
+#progress-rating-100 { background-color: green; width: 0; }
+#progress-rating-50 { background-color: orange; width: 0; }
+#progress-rating-0 { background-color: red; width: 0; }
+#progress-rating-null { background-color: grey; width: 100%; }
 
 /* 📱 Mobilná responzivita */
 @media (max-width: 768px) {
